@@ -15,7 +15,7 @@ html, body, #root {
 .dashboard-wrapper {
   width: 100%;
   min-height: 100vh;
-  padding: 15px 20px; /* comfortable spacing from edges */
+  padding: 15px 20px;
   background: #f9f9fc;
   display: flex;
   flex-direction: column;
@@ -23,11 +23,11 @@ html, body, #root {
 
 .dashboard-inner {
   width: 100%;
-  max-width: 100%; /* content stretches to wrapper edges */
+  max-width: 100%;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 5px; /* small gap between sections */
+  gap: 5px;
 }
 
 /* ================= Header ================= */
@@ -36,8 +36,8 @@ html, body, #root {
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 6px; /* elements inside header */
-  margin-bottom: 8px; /* small gap to stats cards */
+  gap: 6px;
+  margin-bottom: 8px;
 }
 
 .dashboard-header h1 {
@@ -98,17 +98,16 @@ html, body, #root {
   margin-bottom: 4px;
 }
 
-/* ================= Nav Tabs Wrapper ================= */
+/* ================= Nav Tabs ================= */
 .nav-tabs-wrapper {
-  background: white;          /* container background */
-  padding: 10px 12px;         /* padding inside container */
-  border-radius: 20px;        /* fully curved corners */
-  display: inline-block;      /* shrink to fit content */
+  background: white;
+  padding: 10px 12px;
+  border-radius: 20px;
+  display: inline-block;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  margin-bottom: 15px;        /* spacing below container */
+  margin-bottom: 15px;
 }
 
-/* ================= Nav Tabs ================= */
 .nav-tabs {
   display: flex;
   gap: 10px;
@@ -116,9 +115,9 @@ html, body, #root {
 }
 
 .nav-tabs button {
-  flex: none;                 /* prevent stretching */
-  padding: 6px 12px;          /* smaller padding */
-  min-width: 80px;            /* shorter buttons */
+  flex: none;
+  padding: 6px 12px;
+  min-width: 80px;
   background: #f5f5f5;
   border: none;
   border-radius: 12px;
@@ -129,6 +128,25 @@ html, body, #root {
 
 .nav-tabs button:hover {
   background: #e0e0e0;
+}
+
+.nav-tabs button.active {
+  background: #8a2be2;
+  color: white;
+}
+
+/* ================= Main Tab Card (Content Area) ================= */
+.main-tab-card {
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+  padding: 20px;
+  min-height: 60vh; /* ensures content takes up vertical space */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-x: auto;
 }
 
 /* ================= Contributions ================= */
@@ -176,35 +194,35 @@ html, body, #root {
   border-radius: 12px;
   font-size: 14px;
 }
+
 .dashboard-subtitle {
   display: flex;
-  align-items: center; /* vertical alignment */
-  gap: 10px;           /* space between icon and text */
-  font-size: 24px;     /* increase paragraph size */
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
   font-weight: 600;
   margin: 0;
 }
 
 /* Icon in purple circle */
 .icon-circle {
-  background-color: #8a2be2; /* purple */
+  background-color: #8a2be2;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;   /* circle size */
+  width: 40px;
   height: 40px;
-  color: white;  /* icon color */
+  color: white;
 }
 
 .icon-circle svg {
-  font-size: 28px; /* icon size */
+  font-size: 28px;
 }
 
 .dashboard-text {
   display: inline-block;
 }
-
 
 /* ================= Responsive Breakpoints ================= */
 @media (max-width: 1200px) {
@@ -219,10 +237,11 @@ html, body, #root {
 
 @media (max-width: 768px) {
   .dashboard-header h1 { font-size: 20px; }
-  .nav-tabs-wrapper { width: 100%; padding: 8px 10px; } /* full width on mobile */
-  .nav-tabs button { flex: 1 1 100%; min-width: 0; }   /* buttons stack */
+  .nav-tabs-wrapper { width: 100%; padding: 8px 10px; }
+  .nav-tabs button { flex: 1 1 100%; min-width: 0; }
   .stat-card h2 { font-size: 20px; }
   .dashboard-wrapper { padding: 12px 15px; }
+  .main-tab-card { padding: 16px; min-height: 50vh; }
 }
 
 @media (max-width: 480px) {
@@ -233,6 +252,7 @@ html, body, #root {
   .stat-card h2 { font-size: 18px; }
   .stats-container { grid-template-columns: 1fr; }
   .nav-tabs-wrapper { padding: 6px 8px; }
+  .main-tab-card { padding: 14px; border-radius: 16px; }
 }
 
 @media (max-width: 360px) {

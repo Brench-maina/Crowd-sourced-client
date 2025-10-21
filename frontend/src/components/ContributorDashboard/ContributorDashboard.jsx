@@ -15,12 +15,8 @@ export default function ContributorDashboard() {
           <StatsCards />
         </div>
 
-        {/* Nav Tabs Section with Curved Container */}
-        <div className="nav-section">
-          <div className="nav-tabs-wrapper">
-            <NavTabs />
-          </div>
-        </div>
+        {/* ✅ Directly render NavTabs */}
+        <NavTabs />
       </div>
     </div>
   );
