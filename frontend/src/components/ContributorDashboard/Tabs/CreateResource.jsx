@@ -1,60 +1,30 @@
 export default function CreateResource() {
   return (
-    <div className="create-resource-card">
-      <h2 className="create-title">Create New Learning Resource</h2>
-
+    <div className="tab-section">
+      <h2>Create New Resource</h2>
       <form className="create-form">
-        <div className="form-group">
-          <label>Resource Type</label>
-          <select>
-            <option value="">Choose resource type...</option>
-            <option value="video">Video</option>
-            <option value="article">Article</option>
-            <option value="tutorial">Tutorial</option>
-            <option value="quiz">Quiz</option>
-          </select>
-        </div>
+        <label>Resource Type</label>
+        <select>
+          <option>Video</option>
+          <option>Article</option>
+          <option>Tutorial</option>
+        </select>
 
-        <div className="form-group">
-          <label>Title</label>
-          <input type="text" placeholder="Give your resource a catchy title..." />
-        </div>
+        <label>Title</label>
+        <input type="text" placeholder="Enter resource title" />
 
-        <div className="form-group">
-          <label>Subject/Category</label>
-          <input type="text" placeholder="Select a subject..." />
-        </div>
+        <label>Subject/Category</label>
+        <input type="text" placeholder="e.g. Mathematics" />
 
-        <div className="form-group">
-          <label>Grade Level</label>
-          <input type="text" placeholder="Target grade level..." />
-        </div>
+        <label>Grade Level</label>
+        <input type="text" placeholder="e.g. Beginner" />
 
-        <div className="form-group">
-          <label>Description</label>
-          <textarea
-            rows="4"
-            placeholder="Describe what students will learn from this resource..."
-          ></textarea>
-        </div>
-
-        <div className="contributor-tips">
-          <h3>💡 Contributor Tips:</h3>
-          <ul>
-            <li>Make content age-appropriate and engaging</li>
-            <li>Include examples and practice exercises</li>
-            <li>Use visuals and interactive elements when possible</li>
-            <li>Earn XP based on views, ratings, and engagement!</li>
-          </ul>
-        </div>
+        <label>Description</label>
+        <textarea placeholder="Write a brief description..."></textarea>
 
         <div className="form-buttons">
-          <button type="submit" className="submit-btn">
-            Submit for Review
-          </button>
-          <button type="button" className="draft-btn">
-            Save as Draft
-          </button>
+          <button type="submit">Submit Resource</button>
+          <button type="button" className="draft-btn">Save as Draft</button>
         </div>
       </form>
     </div>
