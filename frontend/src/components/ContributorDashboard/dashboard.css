@@ -135,7 +135,7 @@ html, body, #root {
   color: white;
 }
 
-/* ================= Main Tab Card (Content Area) ================= */
+/* ================= Main Tab Card ================= */
 .main-tab-card {
   width: 100%;
   background: white;
@@ -204,7 +204,6 @@ html, body, #root {
   margin: 0;
 }
 
-/* Icon in purple circle */
 .icon-circle {
   background-color: #8a2be2;
   border-radius: 50%;
@@ -224,55 +223,69 @@ html, body, #root {
   display: inline-block;
 }
 
-/* ============= Create Resource Styling ============= */
+/* ================= Create Resource Form ================= */
 .tab-section {
   display: flex;
   flex-direction: column;
-  align-items: center; /* centers the content horizontally */
+  align-items: center;
   width: 100%;
   margin-top: 20px;
-}
-
-.create-form {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  padding: 25px 30px;
-  width: 100%;
-  max-width: 700px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 }
 
 .tab-section h2 {
   align-self: flex-start;
   font-size: 20px;
   color: #333;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   font-weight: 600;
 }
 
-/* Label + Inputs small and stacked */
-.create-form label {
+/* Contributor Tips */
+.contributor-tips {
+  background: #f5f0ff;
+  color: #5a2ea6;
   font-size: 14px;
+  border-left: 4px solid #8a2be2;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Form Card */
+.create-form {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  padding: 25px 30px;
+  width: 100%;
+  max-width: 650px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.create-form label {
+  font-size: 15px;
   font-weight: 600;
-  color: #444;
+  color: #333;
   display: block;
   margin-bottom: 4px;
 }
 
+/* Inputs shorter + darker */
 .create-form input,
 .create-form select,
 .create-form textarea {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid #ccc;
+  width: 95%;
+  padding: 10px 12px;
+  border: 1px solid #bbb;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
-  transition: border 0.2s ease;
-  background: #fafafa;
+  transition: border 0.2s ease, background 0.2s ease;
+  background: #f2f2f5;
 }
 
 .create-form textarea {
@@ -291,14 +304,14 @@ html, body, #root {
 .form-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
-  gap: 10px;
+  margin-top: 14px;
+  gap: 12px;
 }
 
 .create-form button {
   flex: 1;
   padding: 10px;
-  font-size: 14px;
+  font-size: 15px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
@@ -324,44 +337,10 @@ html, body, #root {
 }
 
 /* ================= Responsive Breakpoints ================= */
-@media (max-width: 1200px) {
-  .dashboard-header h1 { font-size: 24px; }
-  .stats-container { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
-}
-
-@media (max-width: 1024px) {
-  .dashboard-header h1 { font-size: 22px; }
-  .stats-container { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-}
-
 @media (max-width: 768px) {
-  .dashboard-header h1 { font-size: 20px; }
-  .nav-tabs-wrapper { width: 100%; padding: 8px 10px; }
-  .nav-tabs button { flex: 1 1 100%; min-width: 0; }
-  .stat-card h2 { font-size: 20px; }
   .dashboard-wrapper { padding: 12px 15px; }
-  .main-tab-card { padding: 16px; min-height: 50vh; }
-  .tab-section { padding: 16px; }
-  .create-form { padding: 20px; }
-}
-
-@media (max-width: 480px) {
-  html { font-size: 14px; }
-  .dashboard-wrapper { padding: 10px; }
-  .dashboard-header h1 { font-size: 18px; }
-  .back-btn { padding: 6px 10px; font-size: 12px; }
-  .stat-card h2 { font-size: 18px; }
-  .stats-container { grid-template-columns: 1fr; }
-  .nav-tabs-wrapper { padding: 6px 8px; }
-  .main-tab-card { padding: 14px; border-radius: 16px; }
-  .tab-section { padding: 14px; }
-  .create-form { padding: 18px; }
-}
-
-@media (max-width: 360px) {
-  html { font-size: 13px; }
-  .dashboard-header h1 { font-size: 16px; }
-  .back-btn { padding: 4px 8px; font-size: 12px; }
-  .stat-card h2 { font-size: 16px; }
-  .nav-tabs button { font-size: 12px; padding: 4px 6px; }
+  .main-tab-card { padding: 16px; }
+  .create-form { padding: 20px; max-width: 100%; }
+  .create-form input, .create-form select, .create-form textarea { width: 100%; }
+  .tab-section h2 { font-size: 18px; }
 }
