@@ -16,10 +16,11 @@ html, body, #root {
   width: 100%;
   min-height: 100vh;
   padding: 15px 20px;
-  background: #f9f9fc;
+  background: #E6ECF2;   /* ✅ changed from #f9f9fc */
   display: flex;
   flex-direction: column;
 }
+
 
 .dashboard-inner {
   width: 100%;
@@ -144,57 +145,12 @@ html, body, #root {
   padding: 20px;
   min-height: 60vh;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;  /* center horizontally */
+  align-items: flex-start;
   overflow-x: auto;
 }
 
-/* ================= Contributions ================= */
-.contributions-section h2 {
-  margin-bottom: 12px;
-}
-
-.contribution-card {
-  background: white;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.contribution-card p {
-  margin: 0;
-  line-height: 1.4;
-}
-
-.status {
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 14px;
-  text-transform: capitalize;
-}
-
-.status.approved {
-  background: #e0ffe5;
-  color: #008000;
-}
-
-.status.pending {
-  background: #fff5e0;
-  color: #b97700;
-}
-
-.type {
-  background: #f0f0f0;
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 14px;
-}
-
+/* ================= React Icon ================= */
 .dashboard-subtitle {
   display: flex;
   align-items: center;
@@ -223,34 +179,21 @@ html, body, #root {
   display: inline-block;
 }
 
-/* ================= Create Resource Form ================= */
-.tab-section {
+/* ================= Create Resource Section ================= */
+.create-resource-card {
+  width: 100%;
+  max-width: 650px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-top: 20px;
+  gap: 16px;
 }
 
-.tab-section h2 {
-  align-self: flex-start;
-  font-size: 20px;
-  color: #333;
-  margin-bottom: 6px;
+.form-title {
+  font-size: 22px;
   font-weight: 600;
-}
-
-/* Contributor Tips */
-.contributor-tips {
-  background: #f5f0ff;
-  color: #5a2ea6;
-  font-size: 14px;
-  border-left: 4px solid #8a2be2;
-  padding: 10px 14px;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  width: 100%;
-  max-width: 700px;
+  color: #333;
+  text-align: left;   /* stays at top left */
+  margin-bottom: 5px;
 }
 
 /* Form Card */
@@ -259,8 +202,6 @@ html, body, #root {
   border-radius: 16px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
   padding: 25px 30px;
-  width: 100%;
-  max-width: 650px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -278,19 +219,20 @@ html, body, #root {
 .create-form input,
 .create-form select,
 .create-form textarea {
-  width: 95%;
-  padding: 10px 12px;
-  border: 1px solid #bbb;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #999;
   border-radius: 10px;
   font-size: 15px;
   outline: none;
   transition: border 0.2s ease, background 0.2s ease;
-  background: #f2f2f5;
+  background: #eaeaea;
+  color: #111;
 }
 
 .create-form textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 90px;
 }
 
 .create-form input:focus,
@@ -300,11 +242,23 @@ html, body, #root {
   background: #fff;
 }
 
-/* Buttons (Submit + Draft) */
+/* Contributor Tips under description */
+.contributor-tips {
+  background: #f5f0ff;
+  color: #5a2ea6;
+  font-size: 14px;
+  border-left: 4px solid #8a2be2;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-top: -6px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+/* Buttons */
 .form-buttons {
   display: flex;
   justify-content: space-between;
-  margin-top: 14px;
   gap: 12px;
 }
 
@@ -336,11 +290,10 @@ html, body, #root {
   background: #e4e4e4;
 }
 
-/* ================= Responsive Breakpoints ================= */
+/* ================= Responsive ================= */
 @media (max-width: 768px) {
-  .dashboard-wrapper { padding: 12px 15px; }
   .main-tab-card { padding: 16px; }
-  .create-form { padding: 20px; max-width: 100%; }
-  .create-form input, .create-form select, .create-form textarea { width: 100%; }
-  .tab-section h2 { font-size: 18px; }
+  .create-form { padding: 20px; }
+  .form-buttons { flex-direction: column; }
+  .form-title { font-size: 20px; }
 }
