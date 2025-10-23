@@ -1,0 +1,187 @@
+/* dashboard.css */
+/* ================= Base Layout ================= */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+.dashboard-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  padding: 15px 20px;
+  background: #E6ECF2;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-inner {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* ================= Header ================= */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.dashboard-header h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+.back-btn {
+  padding: 8px 14px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 14px;
+}
+
+.back-btn:hover {
+  background: #f1f1f1;
+}
+
+/* ================= Stats Cards ================= */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin: 8px 0;
+}
+
+.stat-card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.stat-card h2 {
+  font-size: 24px;
+  margin: 0 0 6px 0;
+}
+
+.stat-card p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.xp {
+  background: linear-gradient(to right, #d900c0, #ff00b8);
+  color: white;
+}
+
+.xp h2 {
+  color: white;
+  margin-bottom: 4px;
+}
+
+/* ================= Nav Tabs ================= */
+.nav-tabs-wrapper {
+  background: white;
+  padding: 10px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  margin-bottom: 15px;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-tabs button {
+  flex: none;
+  padding: 6px 12px;
+  min-width: 80px;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.nav-tabs button:hover {
+  background: #e0e0e0;
+}
+
+.nav-tabs button.active {
+  background: #8a2be2;
+  color: white;
+}
+
+/* ================= Main Tab Card ================= */
+.main-tab-card {
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+  padding: 20px;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: auto;
+}
+
+/* ================= React Icon ================= */
+.dashboard-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.icon-circle {
+  background-color: #8a2be2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: white;
+}
+
+.icon-circle svg {
+  font-size: 28px;
+}
+
+.dashboard-text {
+  display: inline-block;
+}
+
+/* ================= Responsive ================= */
+@media (max-width: 768px) {
+  .main-tab-card { padding: 16px; }
+  .nav-tabs { flex-direction: column; }
+  .nav-tabs button { width: 100%; }
+}
