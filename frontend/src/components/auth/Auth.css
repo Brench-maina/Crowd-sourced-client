@@ -269,3 +269,122 @@
     gap: 12px;
   }
 }
+
+/* components/auth/Auth.css */
+/* ... (keep all previous styles) ... */
+
+.auth-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e5e9;
+}
+
+.auth-footer p {
+  color: #666;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #8a2be2;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.link-button:hover {
+  color: #7020c9;
+}
+
+/* Back button specific styles */
+.auth-footer .link-button:first-child {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-footer .link-button:first-child:hover {
+  text-decoration: underline;
+}
+
+/* Demo Accounts Section */
+.demo-accounts {
+  margin: 20px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.demo-accounts h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #666;
+  text-align: center;
+}
+
+.demo-account-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+}
+
+.demo-account-list div {
+  padding: 4px;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+/* Enhanced Error Messages */
+.error-message {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.error-message .link-button {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.error-message .link-button:hover {
+  color: #b91c1c;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .demo-account-list {
+    font-size: 11px;
+  }
+  
+  .demo-accounts {
+    padding: 12px;
+  }
+
+  .auth-footer p {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .auth-footer .link-button:first-child {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+}

@@ -1,25 +1,43 @@
-
+// App.jsx
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import LandingPage from './components/landing/LandingPage';
 import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
 import ContributorDashboard from "./components/ContributorDashboard/ContributorDashboard";
 import LearnerDashboard from "./components/learner/LearnerDashboard";
-// import AdminDashboard from "./components/admin/AdminDashboard"; // You'll need to create this
+// import AdminDashboard from "./components/admin/AdminDashboard";
 import './App.css';
+
+// Loading Component
+function LoadingSpinner() {
+  return (
+    <div className="loading-container">
+      <div className="loading-spinner"></div>
+      <p>Loading...</p>
+    </div>
+  );
+}
 
 // Main App Content
 function AppContent() {
-  const { user, logout } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
+  const { user, logout, loading } = useAuth();
+  const [currentView, setCurrentView] = useState('landing'); // 'landing', 'login', 'signup'
+
+  // Show loading spinner while checking authentication
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   // Render appropriate dashboard based on user role
   const renderDashboard = () => {
+    if (!user) return null;
+
     switch (user.role) {
       case 'contributor':
         return <ContributorDashboard />;
       case 'admin':
-        return <AdminDashboard />; // You'll need to create this component
+        return <AdminDashboard />;
       case 'learner':
       default:
         return <LearnerDashboard />;
@@ -30,7 +48,6 @@ function AppContent() {
   if (user) {
     return (
       <div className="app">
-        {/* Optional: Add a logout button */}
         <div className="app-header">
           <div className="user-info">
             <span className="user-avatar">{user.avatar}</span>
@@ -46,12 +63,29 @@ function AppContent() {
     );
   }
 
-  // If user is not logged in, show auth pages
-  return isLogin ? (
-    <Login switchToSignup={() => setIsLogin(false)} />
-  ) : (
-    <Signup switchToLogin={() => setIsLogin(true)} />
-  );
+  // Render different views based on currentView state
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'login':
+        return <Login 
+          switchToSignup={() => setCurrentView('signup')}
+          onBackToLanding={() => setCurrentView('landing')}
+        />;
+      case 'signup':
+        return <Signup 
+          switchToLogin={() => setCurrentView('login')}
+          onBackToLanding={() => setCurrentView('landing')}
+        />;
+      case 'landing':
+      default:
+        return <LandingPage 
+          onShowLogin={() => setCurrentView('login')}
+          onShowSignup={() => setCurrentView('signup')}
+        />;
+    }
+  };
+
+  return renderCurrentView();
 }
 
 // Main App Component with Auth Provider

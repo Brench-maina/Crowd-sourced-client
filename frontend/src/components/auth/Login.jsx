@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import './Auth.css';
 
-const Login = ({ switchToSignup }) => {
+const Login = ({ switchToSignup, onBackToLanding }) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -11,13 +11,15 @@ const Login = ({ switchToSignup }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, isEmailRegistered } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    // Clear error when user starts typing
+    if (error) setError('');
   };
 
   const handleSubmit = async (e) => {
@@ -26,27 +28,32 @@ const Login = ({ switchToSignup }) => {
     setLoading(true);
 
     try {
+      // Check if user exists
+      if (!isEmailRegistered(formData.email)) {
+        setError('No account found with this email. Please sign up first.');
+        setLoading(false);
+        return;
+      }
+
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Mock authentication - in real app, this would be an API call
-      if (formData.email && formData.password) {
-        const userData = {
-          id: 1,
-          email: formData.email,
-          name: formData.email.split('@')[0],
-          role: formData.role,
-          avatar: '👤'
-        };
-        login(userData);
-      } else {
-        setError('Please fill in all fields');
+      // Attempt login
+      const result = login(formData.email, formData.password);
+      
+      if (!result.success) {
+        setError(result.error);
       }
+      // If successful, the AuthContext will handle the redirect
     } catch (err) {
       setError('Failed to log in. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSignupInstead = () => {
+    switchToSignup();
   };
 
   return (
@@ -57,7 +64,23 @@ const Login = ({ switchToSignup }) => {
           <p>Sign in to your account</p>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+          <div className="error-message">
+            {error}
+            {error.includes('No account found') && (
+              <div style={{ marginTop: '8px' }}>
+                <button 
+                  type="button" 
+                  className="link-button" 
+                  onClick={handleSignupInstead}
+                  style={{ fontSize: '14px' }}
+                >
+                  Create an account instead
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
@@ -117,8 +140,17 @@ const Login = ({ switchToSignup }) => {
           </button>
         </form>
 
+        
         <div className="auth-footer">
           <p>
+            <button 
+              type="button" 
+              className="link-button" 
+              onClick={onBackToLanding}
+              style={{ marginRight: '1rem' }}
+            >
+              ← Back to Home
+            </button>
             Don't have an account?{' '}
             <button type="button" className="link-button" onClick={switchToSignup}>
               Sign up
