@@ -76,7 +76,7 @@ const LandingPage = ({ onShowLogin, onShowSignup }) => {
         <div className="landing-nav">
           <div className="nav-brand">
             <span className="brand-icon">🎯</span>
-            <span className="brand-name">EduPlatform</span>
+            <span className="brand-name">Crowd-Sourced-Learning</span>
           </div>
           <nav className="nav-links">
             <a href="#features">Features</a>
