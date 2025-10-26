@@ -38,13 +38,14 @@ const Login = ({ switchToSignup, onBackToLanding }) => {
       });
 
       const data = await response.json();
+      
 
       if (!response.ok) {
         // Handle backend error messages
         setError(data.message || 'Invalid username or password.');
       } else {
         // If login successful, update AuthContext
-        login(data.user, data.token); 
+        login(data.user, data.access_token); 
       }
 
     } catch (err) {
