@@ -418,7 +418,7 @@ const LandingPage = ({ onShowLogin, onShowSignup }) => {
           <div className="footer-content">
             <div className="footer-brand">
               <span className="brand-icon">🎯</span>
-              <span className="brand-name">EduPlatform</span>
+              <span className="brand-name">Crowd Sourced Learning</span>
               <p>Transforming education through technology and community.</p>
             </div>
             <div className="footer-links">
@@ -437,7 +437,7 @@ const LandingPage = ({ onShowLogin, onShowSignup }) => {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2024 EduPlatform. All rights reserved.</p>
+            <p>&copy; 2025 Crowd Sourced Learning. All rights reserved.</p>
           </div>
         </div>
       </footer>

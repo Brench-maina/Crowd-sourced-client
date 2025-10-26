@@ -1,4 +1,3 @@
-// components/auth/Signup.jsx
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import './Auth.css';
@@ -13,14 +12,15 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signup, isEmailRegistered } = useAuth();
+
+  //Use login instead of signup to automatically log user in
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
-    // Clear error when user starts typing
     if (error) setError('');
   };
 
@@ -28,43 +28,54 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
     e.preventDefault();
     setError('');
 
-    // Validation
+    //Basic validation
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-
-    // Check if email already registered
-    if (isEmailRegistered(formData.email)) {
-      setError('An account with this email already exists. Please sign in instead.');
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters');
       return;
     }
 
     setLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const res = await fetch('http://localhost:5555/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role.toLowerCase(),
+        }),
+      });
+
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error('Invalid server response');
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || data.message || 'Failed to create account');
+      }
       
-      // Register user
-      const userData = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password, // Store for login verification
-        role: formData.role,
-        avatar: '👤',
-        joinDate: new Date().toISOString()
-      };
-      
-      signup(userData);
-      // Success - AuthContext will handle redirect
+      //auto login
+      if (data.access_token && data.user) {
+      localStorage.setItem('token', data.access_token);
+        login(data.user, data.access_token);
+      } else {
+        alert('Account created successfully! Please log in.');
+        switchToLogin();
+      }
     } catch (err) {
-      setError('Failed to create account. Please try again.');
+      console.error('Signup error:', err);
+      setError(err.message || 'Failed to connect to the server. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -92,9 +103,9 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
             {error}
             {error.includes('already exists') && (
               <div style={{ marginTop: '8px' }}>
-                <button 
-                  type="button" 
-                  className="link-button" 
+                <button
+                  type="button"
+                  className="link-button"
                   onClick={switchToLogin}
                   style={{ fontSize: '14px' }}
                 >
@@ -107,14 +118,14 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
 
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="name">Full Name</label>
+            <label htmlFor="name">Username</label>
             <input
               type="text"
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="Enter your full name"
+              placeholder="Enter your username"
               required
             />
           </div>
@@ -140,7 +151,7 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Create a password (min. 6 characters)"
+              placeholder="Create a password (min. 8 characters)"
               required
             />
           </div>
@@ -162,7 +173,10 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
             <label htmlFor="role">I want to join as a...</label>
             <div className="role-cards">
               {['learner', 'contributor', 'admin'].map((role) => (
-                <label key={role} className={`role-card ${formData.role === role ? 'selected' : ''}`}>
+                <label
+                  key={role}
+                  className={`role-card ${formData.role === role ? 'selected' : ''}`}
+                >
                   <input
                     type="radio"
                     name="role"
@@ -191,8 +205,8 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
             </div>
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="auth-button primary"
             disabled={loading}
           >
@@ -202,16 +216,20 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
 
         <div className="auth-footer">
           <p>
-            <button 
-              type="button" 
-              className="link-button" 
+            <button
+              type="button"
+              className="link-button"
               onClick={onBackToLanding}
               style={{ marginRight: '1rem' }}
             >
               ← Back to Home
             </button>
             Already have an account?{' '}
-            <button type="button" className="link-button" onClick={switchToLogin}>
+            <button
+              type="button"
+              className="link-button"
+              onClick={switchToLogin}
+            >
               Sign in
             </button>
           </p>
