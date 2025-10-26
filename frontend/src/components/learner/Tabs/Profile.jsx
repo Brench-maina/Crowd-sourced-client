@@ -1,4 +1,4 @@
-// Tabs/Profile.js
+
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
 
@@ -7,7 +7,7 @@ const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const token = localStorage.getItem("token"); // assuming JWT is stored here after login
+  const token = localStorage.getItem("token"); 
 
   // Fetch user profile from backend
   useEffect(() => {
