@@ -6,7 +6,7 @@ import Login from './components/auth/Login';
 import Signup from './components/auth/Signup';
 import ContributorDashboard from "./components/ContributorDashboard/ContributorDashboard";
 import LearnerDashboard from "./components/learner/LearnerDashboard";
-// import AdminDashboard from "./components/admin/AdminDashboard";
+import AdminDashboard from "./components/admin/AdminDashboard";
 import './App.css';
 
 // Loading Component
