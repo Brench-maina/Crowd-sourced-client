@@ -1,12 +1,23 @@
-import React from "react";
+import Header from "./Header";
+import StatsCards from "./StatsCards";
+import NavTabs from "./NavTabs";
+import "./dashboard.css";
 
-const AdminDashboard = () => {
+export default function AdminDashboard() {
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Admin Dashboard</h1>
-      <p>Welcome, Admin! This is your dashboard placeholder.</p>
+    <div className="dashboard-wrapper">
+      <div className="dashboard-inner">
+        {/* Header Section */}
+        <Header />
+
+        {/* Stats Cards Section */}
+        <div className="stats-container">
+          <StatsCards />
+        </div>
+
+        {/* Navigation Tabs */}
+        <NavTabs />
+      </div>
     </div>
   );
-};
-
-export default AdminDashboard;
+}
