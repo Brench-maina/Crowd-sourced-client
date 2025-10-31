@@ -14,7 +14,6 @@ export default function Header() {
         </p>
         <p>Track your progress and continue learning!</p>
       </div>
-      <button className="back-btn">Back to Platform</button>
     </div>
   );
 }

@@ -404,8 +404,273 @@ html, body, #root {
   background: #ffe0b2;
 }
 
-/* ================= Challenges Styles ================= */
-.challenges-container {
+/* ================= Enhanced Form Styles ================= */
+.create-challenge-form,
+.create-event-form {
+  background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
+  border-radius: 20px;
+  padding: 40px;
+  margin-bottom: 35px;
+  border: 1px solid #f0f2ff;
+  box-shadow: 
+    0 8px 32px rgba(138, 43, 226, 0.08),
+    0 2px 8px rgba(138, 43, 226, 0.04);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.create-challenge-form::before,
+.create-event-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #8a2be2, #6a11cb, #d000f7);
+  background-size: 200% 100%;
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { background-position: -200% 0; }
+  50% { background-position: 200% 0; }
+}
+
+.create-challenge-form:hover,
+.create-event-form:hover {
+  box-shadow: 
+    0 15px 45px rgba(138, 43, 226, 0.15),
+    0 5px 15px rgba(138, 43, 226, 0.08);
+  transform: translateY(-3px);
+  border-color: #e8e8ff;
+}
+
+.create-challenge-form h3,
+.create-event-form h3 {
+  margin: 0 0 35px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a202c;
+  text-align: center;
+  position: relative;
+  padding-bottom: 18px;
+  background: linear-gradient(135deg, #2d3748, #4a5568);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.create-challenge-form h3::after,
+.create-event-form h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #8a2be2, #6a11cb);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(138, 43, 226, 0.3);
+}
+
+/* Form Grid Layout */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin-bottom: 25px;
+}
+
+/* Form Groups with Enhanced Styling */
+.form-group {
+  margin-bottom: 25px;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #2d3748;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-left: 8px;
+}
+
+.form-group label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 16px;
+  background: linear-gradient(180deg, #8a2be2, #6a11cb);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.form-group:focus-within label {
+  color: #8a2be2;
+}
+
+.form-group:focus-within label::before {
+  opacity: 1;
+}
+
+/* Enhanced Input Fields */
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  background: linear-gradient(135deg, #ffffff 0%, #fafbff 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  box-shadow: 
+    0 2px 12px rgba(0, 0, 0, 0.04),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  position: relative;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #8a2be2;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  box-shadow: 
+    0 6px 20px rgba(138, 43, 226, 0.15),
+    0 2px 8px rgba(138, 43, 226, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #a0aec0;
+  font-weight: 400;
+}
+
+/* Enhanced Textarea */
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+  padding: 16px 18px;
+}
+
+/* Select Arrow Styling */
+.form-group select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238a2be2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 45px;
+}
+
+/* Enhanced Submit Button */
+.submit-btn {
+  background: linear-gradient(135deg, #8a2be2 0%, #6a11cb 50%, #8a2be2 100%);
+  background-size: 200% 100%;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 16px 35px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+  width: 100%;
+  margin-top: 15px;
+  box-shadow: 
+    0 8px 25px rgba(138, 43, 226, 0.35),
+    0 4px 12px rgba(138, 43, 226, 0.2);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.3), 
+    transparent);
+  transition: left 0.6s ease;
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:hover {
+  background-position: -100% 0;
+  transform: translateY(-3px);
+  box-shadow: 
+    0 12px 35px rgba(138, 43, 226, 0.45),
+    0 6px 18px rgba(138, 43, 226, 0.3);
+}
+
+.submit-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 20px rgba(138, 43, 226, 0.4),
+    0 3px 10px rgba(138, 43, 226, 0.25);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 
+    0 4px 15px rgba(138, 43, 226, 0.2),
+    0 2px 6px rgba(138, 43, 226, 0.15);
+  background: linear-gradient(135deg, #a0aec0, #718096);
+}
+
+/* Loading State */
+.submit-btn.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.submit-btn.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Challenges & Events List Styles */
+.challenges-container,
+.events-container {
   width: 100%;
 }
 
@@ -431,64 +696,20 @@ html, body, #root {
   opacity: 0.85;
 }
 
-.create-challenge-form {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+.challenges-list,
+.events-list {
+  width: 100%;
 }
 
-.create-challenge-form h3 {
+.challenges-list h3,
+.events-list h3 {
   margin: 0 0 16px 0;
   font-size: 18px;
   color: #333;
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.form-group {
-  margin-bottom: 16px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 600;
-  color: #333;
-  font-size: 14px;
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  background: white;
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 80px;
-}
-
-.challenges-list {
-  width: 100%;
-}
-
-.challenges-list h3 {
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  color: #333;
-}
-
-.challenge-card {
+.challenge-card,
+.event-card {
   background: white;
   border-radius: 12px;
   padding: 16px;
@@ -496,14 +717,16 @@ html, body, #root {
   border: 1px solid #e9ecef;
 }
 
-.challenge-header {
+.challenge-header,
+.event-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
 }
 
-.challenge-header h4 {
+.challenge-header h4,
+.event-header h4 {
   margin: 0;
   font-size: 16px;
   color: #333;
@@ -526,7 +749,8 @@ html, body, #root {
   color: #856404;
 }
 
-.challenge-card p {
+.challenge-card p,
+.event-card p {
   margin: 0 0 12px 0;
   font-size: 14px;
   color: #666;
@@ -539,81 +763,6 @@ html, body, #root {
   margin: 12px 0;
   font-size: 14px;
   color: #666;
-}
-
-.challenge-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.challenge-actions button {
-  padding: 6px 12px;
-  border: 1px solid #ddd;
-  background: white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 12px;
-  transition: all 0.2s ease;
-}
-
-.challenge-actions button:hover {
-  background: #f8f9fa;
-}
-
-/* ================= Events Styles ================= */
-.events-container {
-  width: 100%;
-}
-
-.create-event-form {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.create-event-form h3 {
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  color: #333;
-}
-
-.events-list {
-  width: 100%;
-}
-
-.events-list h3 {
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  color: #333;
-}
-
-.event-card {
-  background: white;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-  border: 1px solid #e9ecef;
-}
-
-.event-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.event-header h4 {
-  margin: 0;
-  font-size: 16px;
-  color: #333;
-}
-
-.event-card p {
-  margin: 0 0 12px 0;
-  font-size: 14px;
-  color: #666;
-  line-height: 1.4;
 }
 
 .event-details {
@@ -630,11 +779,13 @@ html, body, #root {
   gap: 8px;
 }
 
+.challenge-actions,
 .event-actions {
   display: flex;
   gap: 8px;
 }
 
+.challenge-actions button,
 .event-actions button {
   padding: 6px 12px;
   border: 1px solid #ddd;
@@ -645,32 +796,18 @@ html, body, #root {
   transition: all 0.2s ease;
 }
 
+.challenge-actions button:hover,
 .event-actions button:hover {
   background: #f8f9fa;
 }
 
-/* ================= Form Styles ================= */
+/* ================= Form Title ================= */
 .form-title {
   font-size: 22px;
   font-weight: 600;
   color: #333;
   text-align: left;
   margin-bottom: 20px;
-}
-
-.submit-btn {
-  background: #8a2be2;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.submit-btn:hover {
-  background: #7020c9;
 }
 
 /* ================= Empty States ================= */
@@ -762,6 +899,27 @@ html, body, #root {
   .form-title {
     font-size: 20px;
   }
+  
+  .create-challenge-form,
+  .create-event-form {
+    padding: 30px 25px;
+    margin-bottom: 25px;
+  }
+  
+  .create-challenge-form h3,
+  .create-event-form h3 {
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .submit-btn {
+    padding: 14px 25px;
+    font-size: 15px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -790,7 +948,27 @@ html, body, #root {
   
   .create-challenge-form,
   .create-event-form {
-    padding: 16px;
+    padding: 25px 20px;
+    border-radius: 16px;
+  }
+  
+  .create-challenge-form h3,
+  .create-event-form h3 {
+    font-size: 20px;
+    padding-bottom: 15px;
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .submit-btn {
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 12px;
   }
   
   .nav-tabs-wrapper {

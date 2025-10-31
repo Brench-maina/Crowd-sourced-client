@@ -15,7 +15,6 @@ export default function Header() {
 
         <p>Share your knowledge and earn rewards!</p>
       </div>
-      <button className="back-btn">Back to Platform</button>
     </div>
   );
 }
