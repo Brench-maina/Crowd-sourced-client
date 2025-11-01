@@ -3,6 +3,7 @@ import "./dashboard.css";
 import MyResources from "./Tabs/MyResources";
 import CreateNew from "./Tabs/CreateResource";
 import LearningPaths from "./Tabs/LearningPaths";
+import AddModules from "./Tabs/AddModules";
 import Analytics from "./Tabs/Analytics";
 
 export default function NavTabs() {
@@ -16,6 +17,8 @@ export default function NavTabs() {
         return <CreateNew />;
       case "LearningPaths":
         return <LearningPaths />;
+      case "AddModules":
+        return <AddModules />;  
       case "Analytics":
         return <Analytics />;
       default:
@@ -47,6 +50,13 @@ export default function NavTabs() {
             onClick={() => setActiveTab("LearningPaths")}
           >
             📈 Learning Paths
+          </button>
+
+          <button
+            className={activeTab === "AddModules" ? "active" : ""}
+            onClick={() => setActiveTab("AddModules")}
+          >
+            🧩 Add Modules
           </button>
 
           <button

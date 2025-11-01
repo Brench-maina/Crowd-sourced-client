@@ -1,134 +1,3 @@
-// // Tabs/Courses.jsx
-// import React, { useState } from "react";
-// import "./Courses.css";
-
-// const Courses = () => {
-//   const [courses, setCourses] = useState([
-//     {
-//       id: 1,
-//       title: "Introduction to Fractions",
-//       category: "Mathematics",
-//       progress: 65,
-//       difficulty: "Beginner",
-//       duration: "4 hours",
-//       rating: 4.8,
-//       enrolled: true
-//     },
-//     {
-//       id: 2,
-//       title: "Basic Algebra",
-//       category: "Mathematics",
-//       progress: 100,
-//       difficulty: "Beginner",
-//       duration: "6 hours",
-//       rating: 4.6,
-//       enrolled: true
-//     },
-//     {
-//       id: 3,
-//       title: "Geometry Basics",
-//       category: "Mathematics",
-//       progress: 30,
-//       difficulty: "Intermediate",
-//       duration: "8 hours",
-//       rating: 4.7,
-//       enrolled: true
-//     },
-//     {
-//       id: 4,
-//       title: "Science Experiments",
-//       category: "Science",
-//       progress: 0,
-//       difficulty: "Beginner",
-//       duration: "5 hours",
-//       rating: 4.9,
-//       enrolled: false
-//     }
-//   ]);
-
-//   const [filter, setFilter] = useState("All");
-
-//   const filteredCourses = courses.filter(course => 
-//     filter === "All" || course.category === filter
-//   );
-
-//   return (
-//     <div className="courses-container">
-//       <div className="courses-header">
-//         <h2 className="courses-title">My Courses</h2>
-//         <div className="filter-buttons">
-//           <button 
-//             className={filter === "All" ? "active" : ""}
-//             onClick={() => setFilter("All")}
-//           >
-//             All
-//           </button>
-//           <button 
-//             className={filter === "Mathematics" ? "active" : ""}
-//             onClick={() => setFilter("Mathematics")}
-//           >
-//             Mathematics
-//           </button>
-//           <button 
-//             className={filter === "Science" ? "active" : ""}
-//             onClick={() => setFilter("Science")}
-//           >
-//             Science
-//           </button>
-//         </div>
-//       </div>
-
-//       <div className="courses-grid">
-//         {filteredCourses.map(course => (
-//           <div key={course.id} className="course-card">
-//             <div className="course-header">
-//               <h3>{course.title}</h3>
-//               <span className={`difficulty ${course.difficulty.toLowerCase()}`}>
-//                 {course.difficulty}
-//               </span>
-//             </div>
-            
-//             <div className="course-info">
-//               <span className="category">{course.category}</span>
-//               <span className="duration">⏱️ {course.duration}</span>
-//               <span className="rating">⭐ {course.rating}</span>
-//             </div>
-
-//             {course.enrolled && (
-//               <div className="progress-section">
-//                 <div className="progress-bar">
-//                   <div 
-//                     className="progress-fill" 
-//                     style={{width: `${course.progress}%`}}
-//                   ></div>
-//                 </div>
-//                 <span className="progress-text">{course.progress}% complete</span>
-//               </div>
-//             )}
-
-//             <div className="course-actions">
-//               {course.enrolled ? (
-//                 <button className="continue-btn">
-//                   {course.progress === 0 ? 'Start' : 
-//                    course.progress === 100 ? 'Review' : 'Continue'}
-//                 </button>
-//               ) : (
-//                 <button className="enroll-btn">Enroll Now</button>
-//               )}
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Courses;
-
-
-
-
-// components/learner/Tabs/Courses.jsx
 import React, { useState, useEffect } from "react";
 import "./Courses.css";
 
@@ -136,25 +5,14 @@ const Courses = () => {
   const [learningPaths, setLearningPaths] = useState([]);
   const [myPaths, setMyPaths] = useState([]);
   const [selectedPath, setSelectedPath] = useState(null);
-  const [selectedModule, setSelectedModule] = useState(null);
-  const [selectedLesson, setSelectedLesson] = useState(null);
   const [showPathModal, setShowPathModal] = useState(false);
-  const [showLessonModal, setShowLessonModal] = useState(false);
-  const [showQuizModal, setShowQuizModal] = useState(false);
-  const [currentQuiz, setCurrentQuiz] = useState(null);
-  const [quizAnswers, setQuizAnswers] = useState({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   const API_BASE_URL = "http://localhost:5555";
 
-  // Mock current user (replace with actual auth context)
-  const currentUser = {
-    id: 1,
-    username: "current_user",
-    token: "your-jwt-token-here" // This should come from your auth context
+  const getAuthToken = () => {
+    return localStorage.getItem('token') || '';
   };
 
   // Fetch all learning paths
@@ -162,24 +20,19 @@ const Courses = () => {
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}/learning-paths/paths`, {
-        method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}`
+          'Authorization': `Bearer ${getAuthToken()}`
         }
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error('Failed to fetch learning paths');
 
       const data = await response.json();
       setLearningPaths(data.paths || []);
+      setError("");
     } catch (err) {
       console.error('Error fetching learning paths:', err);
       setError('Failed to load learning paths');
-      // Fallback to mock data
-      setLearningPaths(getMockLearningPaths());
     } finally {
       setLoading(false);
     }
@@ -189,23 +42,17 @@ const Courses = () => {
   const fetchMyPaths = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/learning-paths/my-paths`, {
-        method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}`
+          'Authorization': `Bearer ${getAuthToken()}`
         }
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error('Failed to fetch my paths');
 
       const data = await response.json();
-      setMyPaths(data || []);
+      setMyPaths(data);
     } catch (err) {
       console.error('Error fetching my paths:', err);
-      // Fallback to mock data
-      setMyPaths(getMockMyPaths());
     }
   };
 
@@ -213,58 +60,19 @@ const Courses = () => {
   const fetchLearningPath = async (pathId) => {
     try {
       const response = await fetch(`${API_BASE_URL}/learning-paths/paths/${pathId}`, {
-        method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}`
+          'Authorization': `Bearer ${getAuthToken()}`
         }
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error('Failed to fetch learning path');
 
       const data = await response.json();
-      
-      // Fetch modules for this path
-      const modulesResponse = await fetch(`${API_BASE_URL}/learning-paths/${pathId}/modules`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}`
-        }
-      });
-
-      if (modulesResponse.ok) {
-        const modulesData = await modulesResponse.json();
-        data.modules = await Promise.all(
-          modulesData.map(async (module) => {
-            // Fetch resources for each module
-            const resourcesResponse = await fetch(`${API_BASE_URL}/modules/${module.id}/resources`, {
-              method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentUser.token}`
-              }
-            });
-
-            if (resourcesResponse.ok) {
-              const resourcesData = await resourcesResponse.json();
-              return {
-                ...module,
-                resources: resourcesData
-              };
-            }
-            return module;
-          })
-        );
-      }
-
       return data;
     } catch (err) {
       console.error('Error fetching learning path:', err);
-      // Fallback to mock data
-      return getMockLearningPath(pathId);
+      setError('Failed to load learning path details');
+      return null;
     }
   };
 
@@ -274,19 +82,30 @@ const Courses = () => {
       const response = await fetch(`${API_BASE_URL}/learning-paths/paths/${pathId}/follow`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}`
+          'Authorization': `Bearer ${getAuthToken()}`
         }
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(data.error || 'Failed to follow path');
       }
 
-      await fetchMyPaths(); // Refresh my paths
+      await fetchMyPaths();
+      
+      // If modal is open, refresh the selected path to show modules
+      if (showPathModal && selectedPath?.id === pathId) {
+        const updatedPath = await fetchLearningPath(pathId);
+        if (updatedPath) {
+          setSelectedPath(updatedPath);
+        }
+      }
+      
       return true;
     } catch (err) {
       console.error('Error following path:', err);
+      setError(err.message || 'Failed to follow learning path');
       return false;
     }
   };
@@ -297,68 +116,27 @@ const Courses = () => {
       const response = await fetch(`${API_BASE_URL}/learning-paths/paths/${pathId}/unfollow`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}`
+          'Authorization': `Bearer ${getAuthToken()}`
         }
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error('Failed to unfollow path');
 
-      await fetchMyPaths(); // Refresh my paths
+      await fetchMyPaths();
+      
+      // If modal is open, refresh the selected path
+      if (showPathModal && selectedPath?.id === pathId) {
+        const updatedPath = await fetchLearningPath(pathId);
+        if (updatedPath) {
+          setSelectedPath(updatedPath);
+        }
+      }
+      
       return true;
     } catch (err) {
       console.error('Error unfollowing path:', err);
+      setError('Failed to unfollow learning path');
       return false;
-    }
-  };
-
-  // Create a new learning path (for contributors/admins)
-  const createLearningPath = async (pathData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/learning-paths/paths`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}`
-        },
-        body: JSON.stringify(pathData)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      await fetchLearningPaths(); // Refresh paths list
-      return data;
-    } catch (err) {
-      console.error('Error creating learning path:', err);
-      return null;
-    }
-  };
-
-  // Create a new resource for a module
-  const createModuleResource = async (moduleId, resourceData) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/modules/${moduleId}/resources`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${currentUser.token}`
-        },
-        body: JSON.stringify(resourceData)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return await response.json();
-    } catch (err) {
-      console.error('Error creating resource:', err);
-      return null;
     }
   };
 
@@ -369,251 +147,42 @@ const Courses = () => {
 
   const handlePathClick = async (path) => {
     const pathDetails = await fetchLearningPath(path.id);
-    setSelectedPath(pathDetails);
-    setShowPathModal(true);
-  };
-
-  const handleFollowPath = async (pathId) => {
-    const success = await followPath(pathId);
-    if (success) {
-      // Update local state
-      setLearningPaths(prev => prev.map(p => 
-        p.id === pathId ? { ...p, is_following: true } : p
-      ));
-      if (selectedPath && selectedPath.id === pathId) {
-        setSelectedPath(prev => ({ ...prev, is_following: true }));
-      }
+    if (pathDetails) {
+      setSelectedPath(pathDetails);
+      setShowPathModal(true);
     }
   };
 
-  const handleUnfollowPath = async (pathId) => {
+  const handleFollowPath = async (pathId, event) => {
+    event.stopPropagation();
+    const success = await followPath(pathId);
+    if (success) {
+      // Update UI optimistically
+      setLearningPaths(prev => prev.map(p => 
+        p.id === pathId ? { ...p, is_following: true } : p
+      ));
+    }
+  };
+
+  const handleUnfollowPath = async (pathId, event) => {
+    if (event) event.stopPropagation();
     const success = await unfollowPath(pathId);
     if (success) {
-      // Update local state
+      // Update UI optimistically
       setLearningPaths(prev => prev.map(p => 
         p.id === pathId ? { ...p, is_following: false } : p
       ));
-      if (selectedPath && selectedPath.id === pathId) {
+      setMyPaths(prev => prev.filter(p => p.id !== pathId));
+      if (selectedPath?.id === pathId) {
         setSelectedPath(prev => ({ ...prev, is_following: false }));
       }
     }
   };
 
-  const handleLessonClick = (resource, module) => {
-    setSelectedLesson(resource);
-    setSelectedModule(module);
-    
-    if (resource.type === "video" || resource.url?.includes('youtube')) {
-      setShowLessonModal(true);
-    } else if (resource.type === "quiz") {
-      setCurrentQuiz(resource);
-      setShowQuizModal(true);
-      setQuizAnswers({});
-      setQuizSubmitted(false);
-      setCurrentQuestionIndex(0);
-    }
-  };
-
-  // Mock data fallbacks
-  const getMockLearningPaths = () => [
-    {
-      id: 1,
-      title: "Introduction to Fractions",
-      description: "Learn the basics of fractions, including numerator, denominator, and basic operations.",
-      is_published: true,
-      status: "approved",
-      creator: "Math Expert",
-      created_at: "2024-01-15T00:00:00",
-      module_count: 2,
-      is_following: false
-    },
-    {
-      id: 2,
-      title: "Basic Algebra",
-      description: "Master algebraic expressions, equations, variables, and problem-solving techniques.",
-      is_published: true,
-      status: "approved",
-      creator: "Algebra Pro",
-      created_at: "2024-01-20T00:00:00",
-      module_count: 1,
-      is_following: true
-    },
-    {
-      id: 3,
-      title: "Introduction to Geometry",
-      description: "Explore points, lines, angles, shapes, and basic geometric concepts.",
-      is_published: true,
-      status: "approved",
-      creator: "Geometry Guru",
-      created_at: "2024-01-25T00:00:00",
-      module_count: 1,
-      is_following: false
-    },
-    {
-      id: 4,
-      title: "Science Experiments",
-      description: "Fun and educational science experiments you can do at home.",
-      is_published: true,
-      status: "approved",
-      creator: "Science Wizard",
-      created_at: "2024-01-30T00:00:00",
-      module_count: 3,
-      is_following: false
-    },
-    {
-      id: 5,
-      title: "Next.js for Beginners",
-      description: "Learn Next.js from scratch and build modern web applications.",
-      is_published: true,
-      status: "approved",
-      creator: "Web Dev Pro",
-      created_at: "2024-02-01T00:00:00",
-      module_count: 2,
-      is_following: false
-    }
-  ];
-
-  const getMockMyPaths = () => [
-    {
-      id: 2,
-      title: "Basic Algebra",
-      description: "Master algebraic expressions, equations, variables, and problem-solving techniques.",
-      completion_percentage: 100
-    }
-  ];
-
-  const getMockLearningPath = (pathId) => {
-    const mockPaths = {
-      1: {
-        id: 1,
-        title: "Introduction to Fractions",
-        description: "Learn the basics of fractions, including numerator, denominator, and basic operations.",
-        status: "approved",
-        is_published: true,
-        creator: "Math Expert",
-        created_at: "2024-01-15T00:00:00",
-        modules: [
-          {
-            id: 1,
-            title: "Understanding Fractions",
-            description: "Learn the fundamental concepts of fractions",
-            resource_count: 4,
-            quiz_count: 1,
-            resources: [
-              {
-                id: 1,
-                title: "What are Fractions?",
-                type: "video",
-                url: "https://www.youtube.com/embed/362JVVvgYPE",
-                duration: "15 min",
-                completed: true
-              },
-              {
-                id: 2,
-                title: "Numerator and Denominator",
-                type: "video",
-                url: "https://www.youtube.com/embed/362JVVvgYPE",
-                duration: "10 min",
-                completed: true
-              },
-              {
-                id: 3,
-                title: "Types of Fractions",
-                type: "reading",
-                content: "Learn about proper, improper, and mixed fractions...",
-                duration: "10 min",
-                completed: true
-              },
-              {
-                id: 4,
-                title: "Fractions Basics Quiz",
-                type: "quiz",
-                duration: "20 min",
-                questions: getMockQuizQuestions(),
-                completed: false
-              }
-            ]
-          }
-        ]
-      },
-      2: {
-        id: 2,
-        title: "Basic Algebra",
-        description: "Master algebraic expressions, equations, variables, and problem-solving techniques.",
-        status: "approved",
-        is_published: true,
-        creator: "Algebra Pro",
-        created_at: "2024-01-20T00:00:00",
-        modules: [
-          {
-            id: 2,
-            title: "Introduction to Algebra",
-            description: "Learn the basics of algebraic expressions",
-            resource_count: 3,
-            quiz_count: 1,
-            resources: [
-              {
-                id: 5,
-                title: "What is Algebra?",
-                type: "video",
-                url: "https://www.youtube.com/embed/NybHckSEQBI",
-                duration: "20 min",
-                completed: true
-              },
-              {
-                id: 6,
-                title: "Variables and Expressions",
-                type: "video",
-                url: "https://www.youtube.com/embed/NybHckSEQBI",
-                duration: "25 min",
-                completed: true
-              },
-              {
-                id: 7,
-                title: "Algebra Basics Quiz",
-                type: "quiz",
-                duration: "20 min",
-                questions: getMockQuizQuestions(),
-                completed: true
-              }
-            ]
-          }
-        ]
-      }
-    };
-    return mockPaths[pathId] || mockPaths[1];
-  };
-
-  const getMockQuizQuestions = () => [
-    {
-      id: 1,
-      question: "What is the numerator in the fraction 3/4?",
-      options: ["3", "4", "7", "1"],
-      correctAnswer: 0
-    },
-    {
-      id: 2,
-      question: "Which fraction represents one whole?",
-      options: ["1/2", "2/2", "1/4", "3/4"],
-      correctAnswer: 1
-    },
-    // ... more questions up to 15
-  ];
-
-  const closeModals = () => {
+  const closeModal = () => {
     setShowPathModal(false);
-    setShowLessonModal(false);
-    setShowQuizModal(false);
     setSelectedPath(null);
-    setSelectedModule(null);
-    setSelectedLesson(null);
-    setCurrentQuiz(null);
-    setCurrentQuestionIndex(0);
   };
-
-  const currentQuestion = currentQuiz?.questions?.[currentQuestionIndex];
-  const totalQuestions = currentQuiz?.questions?.length || 0;
-  const progressPercentage = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   if (loading) {
     return (
@@ -688,120 +257,77 @@ const Courses = () => {
       {/* All Learning Paths Section */}
       <div className="section">
         <h3 className="section-title">Available Learning Paths</h3>
-        <div className="courses-grid">
-          {learningPaths.map(path => (
-            <div key={path.id} className="course-card" onClick={() => handlePathClick(path)}>
-              <div className={`course-badge ${path.status}`}>
-                {path.status}
+        {learningPaths.length === 0 ? (
+          <div className="no-paths">
+            <div className="no-paths-icon">📚</div>
+            <p>No learning paths available yet. Check back soon!</p>
+          </div>
+        ) : (
+          <div className="courses-grid">
+            {learningPaths.map(path => (
+              <div key={path.id} className="course-card" onClick={() => handlePathClick(path)}>
+                <div className="course-header">
+                  <h3>{path.title}</h3>
+                </div>
+                <p className="course-description">{path.description}</p>
+                <div className="course-actions">
+                  {path.is_following || myPaths.some(p => p.id === path.id) ? (
+                    <button 
+                      className="unfollow-btn"
+                      onClick={(e) => handleUnfollowPath(path.id, e)}
+                    >
+                      Unfollow
+                    </button>
+                  ) : (
+                    <button 
+                      className="follow-btn"
+                      onClick={(e) => handleFollowPath(path.id, e)}
+                    >
+                      Follow Path
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="course-header">
-                <h3>{path.title}</h3>
-                <span className="creator">By {path.creator}</span>
-              </div>
-              <p className="course-description">{path.description}</p>
-              <div className="course-info">
-                <span className="modules">📚 {path.module_count} modules</span>
-                <span className="duration">🕒 {Math.max(path.module_count * 2, 4)} hours</span>
-              </div>
-              <div className="course-actions">
-                {path.is_following ? (
-                  <button 
-                    className="unfollow-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleUnfollowPath(path.id);
-                    }}
-                  >
-                    Unfollow
-                  </button>
-                ) : (
-                  <button 
-                    className="follow-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFollowPath(path.id);
-                    }}
-                  >
-                    Follow Path
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Learning Path Details Modal */}
       {showPathModal && selectedPath && (
-        <div className="modal-overlay" onClick={closeModals}>
+        <div className="modal-overlay" onClick={closeModal}>
           <div className="course-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div className="modal-title">
                 <h3>{selectedPath.title}</h3>
                 <div className="path-meta">
                   <span className="course-category">By {selectedPath.creator}</span>
-                  <span className={`path-status ${selectedPath.status}`}>
-                    {selectedPath.status}
-                  </span>
                 </div>
               </div>
-              <button className="close-btn" onClick={closeModals}>×</button>
+              <button className="close-btn" onClick={closeModal}>×</button>
             </div>
             
             <div className="modal-content">
               <div className="course-overview">
-                <div className="course-description-full">
-                  <p>{selectedPath.description}</p>
-                </div>
+                <p>{selectedPath.description}</p>
               </div>
 
               <div className="modules-section">
                 <h4 className="section-title">Path Modules</h4>
                 {selectedPath.modules && selectedPath.modules.length > 0 ? (
-                  selectedPath.modules.map(module => (
+                  selectedPath.modules.map((module, index) => (
                     <div key={module.id} className="module-card">
                       <div className="module-header">
                         <div className="module-info">
+                          <div className="module-number">Module {index + 1}</div>
                           <h5>{module.title}</h5>
                           <p className="module-description">{module.description}</p>
                         </div>
                         <div className="module-stats">
-                          <span className="resources">📚 {module.resource_count || module.resources?.length || 0} resources</span>
-                          <span className="quizzes">🧠 {module.quiz_count || module.resources?.filter(r => r.type === 'quiz').length || 0} quizzes</span>
+                          <span className="resources">📚 {module.resource_count} resources</span>
+                          <span className="quizzes">🧠 {module.quiz_count} quizzes</span>
                         </div>
                       </div>
-                      {module.resources && module.resources.length > 0 && (
-                        <div className="lessons-list">
-                          {module.resources.map(resource => (
-                            <div 
-                              key={resource.id} 
-                              className={`lesson-item ${resource.completed ? 'completed' : ''} ${resource.type}`}
-                              onClick={() => handleLessonClick(resource, module)}
-                            >
-                              <div className="lesson-icon">
-                                {resource.type === "video" && "🎥"}
-                                {resource.type === "reading" && "📖"}
-                                {resource.type === "quiz" && "🧠"}
-                                {!resource.type && "📄"}
-                              </div>
-                              <div className="lesson-info">
-                                <span className="lesson-title">{resource.title}</span>
-                                <span className="lesson-meta">
-                                  <span className="lesson-type">{resource.type || 'resource'}</span>
-                                  <span className="lesson-duration">{resource.duration}</span>
-                                </span>
-                              </div>
-                              <div className="lesson-status">
-                                {resource.completed ? (
-                                  <span className="completed-badge">Completed</span>
-                                ) : (
-                                  <span className="incomplete-badge">Start</span>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
                     </div>
                   ))
                 ) : (
@@ -813,7 +339,7 @@ const Courses = () => {
               </div>
 
               <div className="path-actions">
-                {selectedPath.is_following ? (
+                {myPaths.some(p => p.id === selectedPath.id) ? (
                   <button 
                     className="unfollow-btn large"
                     onClick={() => handleUnfollowPath(selectedPath.id)}
@@ -823,64 +349,15 @@ const Courses = () => {
                 ) : (
                   <button 
                     className="follow-btn large"
-                    onClick={() => handleFollowPath(selectedPath.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleFollowPath(selectedPath.id, e);
+                    }}
                   >
                     Follow This Path
                   </button>
                 )}
               </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Lesson Video Modal */}
-      {showLessonModal && selectedLesson && (
-        <div className="modal-overlay" onClick={closeModals}>
-          <div className="video-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3>{selectedLesson.title}</h3>
-              <button className="close-btn" onClick={closeModals}>×</button>
-            </div>
-            <div className="video-container">
-              <iframe
-                width="100%"
-                height="400"
-                src={selectedLesson.url}
-                title={selectedLesson.title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
-            <div className="modal-actions">
-              <button className="primary-btn">
-                Mark as Complete
-              </button>
-              <button className="secondary-btn" onClick={closeModals}>
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Quiz Modal - Use the same beautiful quiz implementation from before */}
-      {showQuizModal && currentQuiz && (
-        <div className="modal-overlay" onClick={closeModals}>
-          <div className="quiz-modal" onClick={(e) => e.stopPropagation()}>
-            {/* Quiz content implementation remains the same */}
-            <div className="quiz-header">
-              <div className="quiz-title-section">
-                <h3>{currentQuiz.title}</h3>
-                <span className="quiz-duration">⏱️ {currentQuiz.duration}</span>
-              </div>
-              <button className="close-btn" onClick={closeModals}>×</button>
-            </div>
-            
-            {/* Add your quiz implementation here */}
-            <div className="quiz-content">
-              <p>Quiz implementation would go here...</p>
             </div>
           </div>
         </div>

@@ -109,28 +109,6 @@ const Login = ({ switchToSignup, onBackToLanding }) => {
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="role">I am a...</label>
-            <div className="role-selector">
-              {['learner', 'contributor', 'admin'].map((role) => (
-                <label key={role} className="role-option">
-                  <input
-                    type="radio"
-                    name="role"
-                    value={role}
-                    checked={formData.role === role}
-                    onChange={handleChange}
-                  />
-                  <span className="role-label">
-                    {role === 'learner' && '🎓 Learner'}
-                    {role === 'contributor' && '👨‍🏫 Contributor'}
-                    {role === 'admin' && '⚙️ Admin'}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-
           <button 
             type="submit" 
             className="auth-button primary"
