@@ -118,8 +118,10 @@ export default function AddQuiz() {
 
     try {
       setLoading(true);
+      const moduleId = selectedModule;
 
-      const quizRes = await fetch(`${API_BASE_URL}/modules/${selectedModule}/quizzes`, {
+      // 1️⃣ Create the quiz under the module
+      const quizRes = await fetch(`${API_BASE_URL}/modules/${moduleId}/quizzes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -127,18 +129,23 @@ export default function AddQuiz() {
         },
         body: JSON.stringify({ title: quizTitle.trim() }),
       });
+
       const quizData = await quizRes.json();
       if (!quizRes.ok) throw new Error(quizData.error || "Failed to create quiz");
 
+      // 2️⃣ Add questions to the created quiz
       for (let q of questions) {
-        const questionRes = await fetch(`${API_BASE_URL}/quizzes/${quizData.id}/questions`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(q),
-        });
+        const questionRes = await fetch(
+          `${API_BASE_URL}/modules/${moduleId}/quizzes/${quizData.id}/questions`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(q),
+          }
+        );
         const questionData = await questionRes.json();
         if (!questionRes.ok) throw new Error(questionData.error || "Failed to add question");
       }
@@ -190,11 +197,15 @@ export default function AddQuiz() {
         )}
 
         <form className="create-form" onSubmit={handleSubmit}>
-          <label htmlFor="learningPath">Select Learning Path <span className="required">*</span></label>
+          <label htmlFor="learningPath">
+            Select Learning Path <span className="required">*</span>
+          </label>
           <select id="learningPath" value={selectedPath} onChange={handlePathChange} required>
             <option value="">Choose a learning path...</option>
             {learningPaths.map((lp) => (
-              <option key={lp.id} value={lp.id}>{lp.title}</option>
+              <option key={lp.id} value={lp.id}>
+                {lp.title}
+              </option>
             ))}
           </select>
 
@@ -210,53 +221,106 @@ export default function AddQuiz() {
             >
               <strong>📚 Modules in this path:</strong>
               {loading && <p>Loading modules...</p>}
-              {!loading && modules.length === 0 && <p>ℹ️ No modules found. Add modules first!</p>}
+              {!loading && modules.length === 0 && (
+                <p>ℹ️ No modules found. Add modules first!</p>
+              )}
               {modules.length > 0 && (
-                <select value={selectedModule} onChange={(e) => setSelectedModule(e.target.value)} required>
+                <select
+                  value={selectedModule}
+                  onChange={(e) => setSelectedModule(e.target.value)}
+                  required
+                >
                   <option value="">Select Module</option>
-                  {modules.map((m) => (<option key={m.id} value={m.id}>{m.title}</option>))}
+                  {modules.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.title}
+                    </option>
+                  ))}
                 </select>
               )}
             </div>
           )}
 
-          <label htmlFor="quizTitle">Quiz Title <span className="required">*</span></label>
-          <input type="text" id="quizTitle" value={quizTitle} onChange={(e) => setQuizTitle(e.target.value)} placeholder="e.g., JavaScript Basics Quiz" required />
+          <label htmlFor="quizTitle">
+            Quiz Title <span className="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="quizTitle"
+            value={quizTitle}
+            onChange={(e) => setQuizTitle(e.target.value)}
+            placeholder="e.g., JavaScript Basics Quiz"
+            required
+          />
 
           <h3 style={{ marginTop: "20px" }}>Questions</h3>
           {questions.map((q, qIndex) => (
-            <div key={qIndex} style={{ background: "#f8f9fa", padding: "15px", borderRadius: "8px", marginBottom: "15px" }}>
-              <input type="text" placeholder={`Question ${qIndex + 1}`} value={q.text} onChange={(e) => {
-                const newQuestions = [...questions];
-                newQuestions[qIndex].text = e.target.value;
-                setQuestions(newQuestions);
-              }} />
+            <div
+              key={qIndex}
+              style={{
+                background: "#f8f9fa",
+                padding: "15px",
+                borderRadius: "8px",
+                marginBottom: "15px",
+              }}
+            >
+              <input
+                type="text"
+                placeholder={`Question ${qIndex + 1}`}
+                value={q.text}
+                onChange={(e) => {
+                  const newQuestions = [...questions];
+                  newQuestions[qIndex].text = e.target.value;
+                  setQuestions(newQuestions);
+                }}
+              />
 
               <h4 style={{ marginTop: "10px" }}>Choices</h4>
               {q.choices.map((c, cIndex) => (
                 <div key={cIndex} style={{ marginBottom: "8px" }}>
-                  <input type="text" placeholder={`Choice ${cIndex + 1}`} value={c.text} onChange={(e) => {
-                    const newQuestions = [...questions];
-                    newQuestions[qIndex].choices[cIndex].text = e.target.value;
-                    setQuestions(newQuestions);
-                  }} style={{ marginRight: "10px" }} />
+                  <input
+                    type="text"
+                    placeholder={`Choice ${cIndex + 1}`}
+                    value={c.text}
+                    onChange={(e) => {
+                      const newQuestions = [...questions];
+                      newQuestions[qIndex].choices[cIndex].text = e.target.value;
+                      setQuestions(newQuestions);
+                    }}
+                    style={{ marginRight: "10px" }}
+                  />
                   <label>
                     Correct?
-                    <input type="checkbox" checked={c.is_correct} onChange={(e) => {
-                      const newQuestions = [...questions];
-                      newQuestions[qIndex].choices[cIndex].is_correct = e.target.checked;
-                      setQuestions(newQuestions);
-                    }} style={{ marginLeft: "6px" }} />
+                    <input
+                      type="checkbox"
+                      checked={c.is_correct}
+                      onChange={(e) => {
+                        const newQuestions = [...questions];
+                        newQuestions[qIndex].choices[cIndex].is_correct = e.target.checked;
+                        setQuestions(newQuestions);
+                      }}
+                      style={{ marginLeft: "6px" }}
+                    />
                   </label>
                 </div>
               ))}
-              <button type="button" className="submit-btn" onClick={() => handleAddChoice(qIndex)}>Add Choice</button>
+              <button
+                type="button"
+                className="submit-btn"
+                onClick={() => handleAddChoice(qIndex)}
+              >
+                Add Choice
+              </button>
             </div>
           ))}
 
-          <button type="button" className="submit-btn" onClick={handleAddQuestion}>Add Question</button>
+          <button type="button" className="submit-btn" onClick={handleAddQuestion}>
+            Add Question
+          </button>
           <div style={{ marginTop: "20px" }}>
-            <button type="submit" className="submit-btn" disabled={loading}>{loading ? "Saving..." : "Save Quiz"}</button>
+            <button type="submit" className="submit-btn" disabled={loading}>
+              {loading ? "Saving..." : "Save Quiz"}
+            </button>
           </div>
         </form>
       </div>
