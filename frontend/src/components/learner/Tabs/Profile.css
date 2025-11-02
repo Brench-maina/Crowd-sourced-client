@@ -311,6 +311,19 @@
   background: #7020c9;
 }
 
+.delete-account {
+  background: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  align-self: flex-start;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .profile-container {

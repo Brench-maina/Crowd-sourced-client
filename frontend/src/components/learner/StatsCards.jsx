@@ -19,23 +19,17 @@ export default function StatsCards() {
   const fetchStatsData = async () => {
     try {
       const token = localStorage.getItem("token");
+      const baseURL = "http://localhost:5555";
       
-      // Fetch user data for XP, level, and badges
-      const userResponse = await fetch("/user/profile", {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      });
-      
-      // Fetch user progress for course stats
-      const progressResponse = await fetch("/progress/user-progress", {
+      // Fetch user data for XP, level, and progress
+      const userResponse = await fetch(`${baseURL}/user/profile`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         }
       });
 
-      // Fetch user badges count
-      const badgesResponse = await fetch("/badges/user-badges", {
+      // Fetch user badges count - FIXED: Use correct endpoint
+      const badgesResponse = await fetch(`${baseURL}/badges/my-badges`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         }
@@ -43,36 +37,45 @@ export default function StatsCards() {
 
       if (userResponse.ok) {
         const userData = await userResponse.json();
+        console.log("User Data:", userData);
         
-        if (progressResponse.ok) {
-          const progressData = await progressResponse.json();
-          const progressArray = progressData.progress || progressData || [];
+        let badgesArray = [];
+
+        if (badgesResponse.ok) {
+          const badgesData = await badgesResponse.json();
+          console.log("Badges Data:", badgesData);
           
-          if (badgesResponse.ok) {
-            const badgesData = await badgesResponse.json();
-            const badgesArray = badgesData.badges || badgesData || [];
-
-            // Calculate stats from backend data
-            const completedCourses = progressArray.filter(p => p.completion_percent === 100).length;
-            const totalCourses = progressArray.length;
-            const avgCompletion = totalCourses > 0 
-              ? Math.round(progressArray.reduce((sum, p) => sum + (p.completion_percent || 0), 0) / totalCourses)
-              : 0;
-
-            // Calculate level based on XP (simplified: every 500 XP = 1 level)
-            const xp = userData.xp || 0;
-            const level = Math.floor(xp / 500) + 1;
-
-            setStats({
-              xp: xp,
-              enrolledCourses: totalCourses,
-              completedCourses: completedCourses,
-              avgCompletion: avgCompletion,
-              badgesCount: badgesArray.length,
-              level: level
-            });
-          }
+          // The endpoint returns earned_badges count directly
+          badgesArray = badgesData.badges?.filter(b => b.is_earned) || [];
+        } else {
+          console.error("Failed to fetch badges:", await badgesResponse.text());
         }
+
+        // Get progress from user profile data
+        const progressArray = userData.progress || [];
+        console.log("Progress Data:", progressArray);
+
+        // Calculate stats from backend data
+        const completedCourses = progressArray.filter(p => p.completion_percent === 100).length;
+        const totalCourses = progressArray.length;
+        const avgCompletion = totalCourses > 0 
+          ? Math.round(progressArray.reduce((sum, p) => sum + (p.completion_percent || 0), 0) / totalCourses)
+          : 0;
+
+        // Calculate level based on XP (simplified: every 500 XP = 1 level)
+        const xp = userData.xp || 0;
+        const level = Math.floor(xp / 500) + 1;
+
+        setStats({
+          xp: xp,
+          enrolledCourses: totalCourses,
+          completedCourses: completedCourses,
+          avgCompletion: avgCompletion,
+          badgesCount: badgesArray.length,
+          level: level
+        });
+      } else {
+        console.error("Failed to fetch user profile:", await userResponse.text());
       }
     } catch (error) {
       console.error("Error fetching stats data:", error);
