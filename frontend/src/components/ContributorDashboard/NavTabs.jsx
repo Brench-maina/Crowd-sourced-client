@@ -5,6 +5,7 @@ import CreateNew from "./Tabs/CreateResource";
 import LearningPaths from "./Tabs/LearningPaths";
 import AddModules from "./Tabs/AddModules";
 import Analytics from "./Tabs/Analytics";
+import AddQuiz from "./Tabs/AddQuiz"; // <- Import your AddQuiz component
 
 export default function NavTabs() {
   const [activeTab, setActiveTab] = useState("MyResources");
@@ -18,9 +19,11 @@ export default function NavTabs() {
       case "LearningPaths":
         return <LearningPaths />;
       case "AddModules":
-        return <AddModules />;  
+        return <AddModules />;
       case "Analytics":
         return <Analytics />;
+      case "AddQuiz": // <- New AddQuiz tab
+        return <AddQuiz />;
       default:
         return <MyResources />;
     }
@@ -64,6 +67,13 @@ export default function NavTabs() {
             onClick={() => setActiveTab("Analytics")}
           >
             📊 Analytics
+          </button>
+
+          <button
+            className={activeTab === "AddQuiz" ? "active" : ""}
+            onClick={() => setActiveTab("AddQuiz")}
+          >
+            📝 Add Quiz
           </button>
         </div>
       </div>
