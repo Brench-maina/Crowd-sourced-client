@@ -21,7 +21,9 @@ const CreateResource = () => {
 
   const token = localStorage.getItem("token");
 
-  // Fetch user's created learning paths
+  // --------------------------
+  // Fetch Learning Paths
+  // --------------------------
   useEffect(() => {
     fetchMyPaths();
   }, []);
@@ -29,11 +31,8 @@ const CreateResource = () => {
   const fetchMyPaths = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/learning-paths/paths`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       if (!response.ok) throw new Error("Failed to fetch paths");
 
       const data = await response.json();
@@ -43,7 +42,9 @@ const CreateResource = () => {
     }
   };
 
-  // Fetch modules when a path is selected
+  // --------------------------
+  // Fetch Modules when Path selected
+  // --------------------------
   const handlePathChange = async (pathId) => {
     setSelectedPath(pathId);
     setSelectedModule("");
@@ -56,12 +57,9 @@ const CreateResource = () => {
       const response = await fetch(
         `${API_BASE_URL}/learning-paths/${pathId}/modules`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (!response.ok) throw new Error("Failed to fetch modules");
 
       const data = await response.json();
@@ -73,13 +71,16 @@ const CreateResource = () => {
     }
   };
 
+  // --------------------------
+  // Handle Form Changes
+  // --------------------------
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // --------------------------
+  // Submit Resource
+  // --------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -119,9 +120,7 @@ const CreateResource = () => {
         throw new Error(data.error || "Failed to create resource");
       }
 
-      setSuccess("Resource created successfully!");
-      
-      // Reset form
+      setSuccess("✅ Resource created successfully!");
       setFormData({
         title: "",
         type: "video",
@@ -138,18 +137,39 @@ const CreateResource = () => {
     }
   };
 
+  // --------------------------
+  // JSX Return
+  // --------------------------
   return (
     <div className="main-tab-card">
       <div className="create-resource-card">
         <h2 className="form-title">Create Resource for Module</h2>
 
+        {/* Info Section */}
+        <div className="info-box" style={{ marginBottom: "20px" }}>
+          <div className="info-icon">💡</div>
+          <div className="info-content">
+            <strong>What are Resources?</strong>
+            <p>
+              Resources are the actual learning materials inside modules —
+              including videos, readings, and quizzes that learners complete to
+              gain XP and progress through a path.
+            </p>
+          </div>
+        </div>
+
+        {/* Error Banner */}
         {error && (
           <div className="error-banner">
             <span className="error-icon">⚠️</span>
             <span>{error}</span>
+            <button className="close-error" onClick={() => setError("")}>
+              ×
+            </button>
           </div>
         )}
 
+        {/* Success Banner */}
         {success && (
           <div className="success-banner">
             <span className="success-icon">✓</span>
@@ -235,7 +255,7 @@ const CreateResource = () => {
             required
           />
 
-          {/* Video URL (if type is video) */}
+          {/* Conditional fields */}
           {formData.type === "video" && (
             <>
               <label htmlFor="url">
@@ -248,38 +268,39 @@ const CreateResource = () => {
                 value={formData.url}
                 onChange={handleChange}
                 placeholder="https://www.youtube.com/embed/..."
-                required={formData.type === "video"}
+                required
               />
-              <small className="help-text">Use YouTube embed URL format</small>
+              <small className="help-text">
+                Use the YouTube embed link (not the normal video URL)
+              </small>
             </>
           )}
 
-          {/* Content (if type is reading) */}
           {formData.type === "reading" && (
             <>
               <label htmlFor="content">
-                Content <span className="required">*</span>
+                Reading Content <span className="required">*</span>
               </label>
               <textarea
                 id="content"
                 name="content"
                 value={formData.content}
                 onChange={handleChange}
-                placeholder="Enter the reading material content..."
-                rows={8}
-                required={formData.type === "reading"}
+                placeholder="Write the reading material here..."
+                rows={6}
+                required
               />
             </>
           )}
 
-          {/* Quiz Info */}
           {formData.type === "quiz" && (
             <div className="info-box">
-              <div className="info-icon">ℹ️</div>
+              <div className="info-icon">🧠</div>
               <div className="info-content">
-                <strong>Quiz Creation</strong>
+                <strong>Quiz Placeholder</strong>
                 <p>
-                  Quiz questions will be added in a future update. For now, this creates a placeholder quiz.
+                  Quizzes will soon support adding questions. For now, this
+                  creates a quiz placeholder.
                 </p>
               </div>
             </div>
@@ -296,16 +317,14 @@ const CreateResource = () => {
             placeholder="e.g., 15 min"
           />
 
-          {/* Tips */}
+          {/* Contributor Tips */}
           <div className="contributor-tips">
             💡 <strong>Contributor Tips:</strong>
             <br />
-            • Make content age-appropriate and engaging.
-            <br />
-            • Include examples and practice exercises.
-            <br />
-            • Use visuals and interactive elements when possible
-            <br />• Earn XP based on views, ratings, and engagement!
+            • Use clear titles and short explanations. <br />
+            • Keep videos under 15 minutes for engagement. <br />
+            • Include examples and short exercises. <br />
+            • Earn XP from learner engagement!
           </div>
 
           {/* Buttons */}
@@ -315,6 +334,25 @@ const CreateResource = () => {
             </button>
           </div>
         </form>
+
+        {/* Success Next Step */}
+        {success && (
+          <div
+            style={{
+              marginTop: "20px",
+              padding: "15px",
+              background: "#e7f5ff",
+              borderRadius: "8px",
+              borderLeft: "4px solid #2196F3",
+            }}
+          >
+            <strong>✨ Next Step:</strong>
+            <p style={{ margin: "8px 0 0 0" }}>
+              Great! You can view your new resource under the selected module in
+              your learning path dashboard.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ const AddModules = () => {
 
   const token = localStorage.getItem("token");
 
+  // Load learning paths on mount
   useEffect(() => {
     fetchMyPaths();
   }, []);
@@ -26,13 +27,9 @@ const AddModules = () => {
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}/learning-paths/paths`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-
       if (!response.ok) throw new Error("Failed to fetch paths");
-
       const data = await response.json();
       setLearningPaths(data.paths || []);
     } catch (err) {
@@ -42,11 +39,11 @@ const AddModules = () => {
     }
   };
 
-  // Fetch existing modules when path is selected
+  // Fetch modules for selected path
   const handlePathChange = async (pathId) => {
     setSelectedPath(pathId);
     setExistingModules([]);
-
+    setModuleForm({ title: "", description: "" });
     if (!pathId) return;
 
     try {
@@ -54,14 +51,10 @@ const AddModules = () => {
       const response = await fetch(
         `${API_BASE_URL}/learning-paths/${pathId}/modules`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
-
       if (!response.ok) throw new Error("Failed to fetch modules");
-
       const data = await response.json();
       setExistingModules(data);
     } catch (err) {
@@ -71,6 +64,7 @@ const AddModules = () => {
     }
   };
 
+  // Input change handler
   const handleChange = (e) => {
     setModuleForm({
       ...moduleForm,
@@ -78,6 +72,7 @@ const AddModules = () => {
     });
   };
 
+  // Submit new module
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -89,7 +84,7 @@ const AddModules = () => {
     }
 
     if (!moduleForm.title.trim() || moduleForm.title.length < 3) {
-      setError("Module title must be at least 3 characters");
+      setError("Module title must be at least 3 characters long");
       return;
     }
 
@@ -110,25 +105,17 @@ const AddModules = () => {
         }
       );
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "Failed to create module");
-      }
+      const data = await response.json();
 
-      setSuccess("Module added successfully!");
+      if (!response.ok) throw new Error(data.error || "Failed to add module");
 
-      // Reset form
-      setModuleForm({
-        title: "",
-        description: "",
-      });
-
-      // Refresh modules list
-      handlePathChange(selectedPath);
-
+      const newModule = data.module;
+      setExistingModules((prev) => [...prev, newModule]);
+      setSuccess("✅ Module added successfully!");
+      setModuleForm({ title: "", description: "" });
       setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
-      setError(err.message || "Failed to create module");
+      setError(err.message || "Failed to save module");
     } finally {
       setLoading(false);
     }
@@ -144,11 +131,14 @@ const AddModules = () => {
           <div className="info-content">
             <strong>What are Modules?</strong>
             <p>
-              Modules are sections within a learning path. For example, a "Web Development" path might have modules like "HTML Basics", "CSS Styling", and "JavaScript Fundamentals".
+              Modules are sections within a learning path. For example, a
+              "Web Development" path might have modules like "HTML Basics",
+              "CSS Styling", and "JavaScript Fundamentals".
             </p>
           </div>
         </div>
 
+        {/* Error + Success messages */}
         {error && (
           <div className="error-banner">
             <span className="error-icon">⚠️</span>
@@ -158,7 +148,6 @@ const AddModules = () => {
             </button>
           </div>
         )}
-
         {success && (
           <div className="success-banner">
             <span className="success-icon">✓</span>
@@ -166,8 +155,8 @@ const AddModules = () => {
           </div>
         )}
 
+        {/* Form */}
         <form className="create-form" onSubmit={handleSubmit}>
-          {/* Select Learning Path */}
           <label htmlFor="learningPath">
             Select Learning Path <span className="required">*</span>
           </label>
@@ -185,51 +174,33 @@ const AddModules = () => {
             ))}
           </select>
 
-          {/* Show existing modules */}
+          {/* Existing modules list */}
           {selectedPath && existingModules.length > 0 && (
-            <div style={{ 
-              background: "#f8f9fa", 
-              padding: "15px", 
-              borderRadius: "8px",
-              marginTop: "15px",
-              marginBottom: "15px"
-            }}>
-              <strong style={{ display: "block", marginBottom: "10px" }}>
-                📚 Existing Modules ({existingModules.length}):
-              </strong>
-              <ul style={{ 
-                listStyle: "none", 
-                padding: 0, 
-                margin: 0 
-              }}>
-                {existingModules.map((module, index) => (
-                  <li 
-                    key={module.id} 
+            <div
+              style={{
+                background: "#f8f9fa",
+                padding: "15px",
+                borderRadius: "8px",
+                marginTop: "15px",
+                marginBottom: "15px",
+              }}
+            >
+              <strong>📚 Existing Modules:</strong>
+              <ul style={{ listStyle: "none", padding: 0, marginTop: "10px" }}>
+                {existingModules.map((module) => (
+                  <li
+                    key={module.id}
                     style={{
-                      padding: "8px 12px",
                       background: "white",
-                      borderRadius: "4px",
-                      marginBottom: "5px",
-                      fontSize: "14px"
+                      padding: "10px",
+                      borderRadius: "6px",
+                      marginBottom: "8px",
                     }}
                   >
-                    {index + 1}. {module.title}
+                    {module.title}
                   </li>
                 ))}
               </ul>
-            </div>
-          )}
-
-          {selectedPath && existingModules.length === 0 && !loading && (
-            <div style={{
-              padding: "10px",
-              background: "#fff3cd",
-              borderRadius: "4px",
-              marginTop: "15px",
-              marginBottom: "15px",
-              fontSize: "14px"
-            }}>
-              ℹ️ No modules yet. Add your first one below!
             </div>
           )}
 
@@ -252,7 +223,7 @@ const AddModules = () => {
             {moduleForm.title.length}/200 characters (minimum 3)
           </small>
 
-          {/* Module Description */}
+          {/* Description */}
           <label htmlFor="description">Module Description</label>
           <textarea
             id="description"
@@ -263,46 +234,17 @@ const AddModules = () => {
             rows={4}
           />
 
-          {/* Tips */}
-          <div className="contributor-tips">
-            💡 <strong>Module Creation Tips:</strong>
-            <br />
-            • Break content into logical, digestible sections
-            <br />
-            • Each module should take 1-2 hours to complete
-            <br />
-            • Order modules from beginner to advanced
-            <br />
-            • After creating modules, add resources to them!
-          </div>
-
-          {/* Buttons */}
+          {/* Submit */}
           <div className="form-buttons">
-            <button 
-              type="submit" 
-              className="submit-btn" 
+            <button
+              type="submit"
+              className="submit-btn"
               disabled={loading || !selectedPath}
             >
-              {loading ? "Adding Module..." : "Add Module"}
+              {loading ? "Adding..." : "Add Module"}
             </button>
           </div>
         </form>
-
-        {/* Next Steps */}
-        {success && (
-          <div style={{
-            marginTop: "20px",
-            padding: "15px",
-            background: "#e7f5ff",
-            borderRadius: "8px",
-            borderLeft: "4px solid #2196F3"
-          }}>
-            <strong>✨ Next Step:</strong>
-            <p style={{ margin: "8px 0 0 0" }}>
-              Now add resources (videos, readings, quizzes) to your modules in the "Create Resources" tab!
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
