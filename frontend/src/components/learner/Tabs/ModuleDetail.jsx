@@ -8,6 +8,13 @@ export default function ModuleDetail({ moduleId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Inline quiz states
+  const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [quizScore, setQuizScore] = useState(null);
+  const [quizLoading, setQuizLoading] = useState(false);
+
   const getAuthToken = () => localStorage.getItem("token") || "";
 
   useEffect(() => {
@@ -23,24 +30,24 @@ export default function ModuleDetail({ moduleId }) {
     try {
       setLoading(true);
       setError("");
-      
+
       console.log(`Fetching module ${moduleId}`);
-      
+
       const response = await fetch(`${API_BASE_URL}/learning-paths/modules/${moduleId}`, {
         headers: { 
           Authorization: `Bearer ${getAuthToken()}`,
           'Content-Type': 'application/json'
         },
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || `Failed to load module: ${response.status}`);
       }
-      
+
       const data = await response.json();
       setModule(data);
-      
+
       // Auto start module if it hasn't been started
       if (!data.is_started) {
         await startModule();
@@ -92,6 +99,61 @@ export default function ModuleDetail({ moduleId }) {
   const retryLoadModule = () => {
     setError("");
     fetchModuleDetails();
+  };
+
+  // 🧠 Fetch quiz questions inline
+  const fetchQuizQuestions = async (quizId) => {
+    try {
+      setQuizLoading(true);
+      const response = await fetch(`${API_BASE_URL}/modules/${moduleId}/quizzes/${quizId}`, {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to load quiz");
+
+      const data = await response.json();
+      setQuizQuestions(data.questions || []);
+      setSelectedQuiz(data);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setQuizLoading(false);
+    }
+  };
+
+  const handleAnswerSelect = (questionId, choiceId) => {
+    setQuizAnswers((prev) => ({ ...prev, [questionId]: choiceId }));
+  };
+
+  const submitQuiz = async () => {
+    try {
+      const payload = {
+        answers: Object.entries(quizAnswers).map(([questionId, choiceId]) => ({
+          question_id: parseInt(questionId),
+          choice_id: parseInt(choiceId),
+        })),
+      };
+
+      const response = await fetch(`${API_BASE_URL}/modules/${moduleId}/quizzes/${selectedQuiz.id}/attempt`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error("Failed to submit quiz");
+
+      const result = await response.json();
+      setQuizScore(result.score);
+      alert(`You scored ${result.score}%`);
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   if (loading) {
@@ -150,7 +212,6 @@ export default function ModuleDetail({ moduleId }) {
             )}
           </div>
         </div>
-        
         <p className="module-description">{module.description}</p>
       </div>
 
@@ -221,7 +282,7 @@ export default function ModuleDetail({ moduleId }) {
                 </div>
                 <button 
                   className="take-quiz-btn"
-                  onClick={() => alert('Quiz functionality coming soon!')}
+                  onClick={() => fetchQuizQuestions(quiz.id)}
                 >
                   {quiz.has_attempted ? 'Retake Quiz' : 'Take Quiz'}
                 </button>
@@ -232,6 +293,61 @@ export default function ModuleDetail({ moduleId }) {
           <p className="no-content">No quizzes available for this module.</p>
         )}
       </div>
+
+      {/* Inline Quiz Section */}
+      {selectedQuiz && (
+        <div className="quiz-detail">
+          <h3>{selectedQuiz.title}</h3>
+
+          {quizLoading ? (
+            <p>Loading quiz questions...</p>
+          ) : (
+            <>
+              {quizQuestions.map((q) => (
+                <div key={q.id} className="quiz-question">
+                  <p><strong>{q.text}</strong></p>
+                  <div className="quiz-choices">
+                    {q.choices.map((c) => (
+                      <label key={c.id} className="choice-option">
+                        <input
+                          type="radio"
+                          name={`question-${q.id}`}
+                          value={c.id}
+                          checked={quizAnswers[q.id] === c.id}
+                          onChange={() => handleAnswerSelect(q.id, c.id)}
+                        />
+                        {c.text}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {!quizScore && (
+                <button className="submit-quiz-btn" onClick={submitQuiz}>
+                  Submit Quiz
+                </button>
+              )}
+
+              {quizScore !== null && (
+                <p className="quiz-score">🎯 Your score: {quizScore}%</p>
+              )}
+
+              <button
+                className="close-quiz-btn"
+                onClick={() => {
+                  setSelectedQuiz(null);
+                  setQuizQuestions([]);
+                  setQuizAnswers({});
+                  setQuizScore(null);
+                }}
+              >
+                Close Quiz
+              </button>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Completion Section */}
       {!module.is_completed && (

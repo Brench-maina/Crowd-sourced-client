@@ -1,52 +1,34 @@
 import { useState } from "react";
 import "./dashboard.css";
-import MyResources from "./Tabs/MyResources";
 import CreateNew from "./Tabs/CreateResource";
 import LearningPaths from "./Tabs/LearningPaths";
 import AddModules from "./Tabs/AddModules";
-import Analytics from "./Tabs/Analytics";
-import AddQuiz from "./Tabs/AddQuiz"; // <- Import your AddQuiz component
+import AddQuiz from "./Tabs/AddQuiz";
 
 export default function NavTabs() {
   const [activeTab, setActiveTab] = useState("MyResources");
 
   const renderTab = () => {
     switch (activeTab) {
-      case "MyResources":
-        return <MyResources />;
-      case "CreateNew":
-        return <CreateNew />;
       case "LearningPaths":
         return <LearningPaths />;
+      case "CreateNew":
+        return <CreateNew />;
       case "AddModules":
         return <AddModules />;
-      case "Analytics":
-        return <Analytics />;
-      case "AddQuiz": // <- New AddQuiz tab
+      case "AddQuiz": 
         return <AddQuiz />;
       default:
-        return <MyResources />;
+        return <LearningPaths />;
     }
   };
 
   return (
     <div className="dashboard-inner">
-      {/* === Top Fixed Nav Tabs (Outside Card) === */}
       <div className="nav-tabs-wrapper">
         <div className="nav-tabs">
-          <button
-            className={activeTab === "MyResources" ? "active" : ""}
-            onClick={() => setActiveTab("MyResources")}
-          >
-            📚 My Resources
-          </button>
 
-          <button
-            className={activeTab === "CreateNew" ? "active" : ""}
-            onClick={() => setActiveTab("CreateNew")}
-          >
-            ✨ Create New
-          </button>
+  
 
           <button
             className={activeTab === "LearningPaths" ? "active" : ""}
@@ -63,10 +45,10 @@ export default function NavTabs() {
           </button>
 
           <button
-            className={activeTab === "Analytics" ? "active" : ""}
-            onClick={() => setActiveTab("Analytics")}
+            className={activeTab === "CreateNew" ? "active" : ""}
+            onClick={() => setActiveTab("CreateNew")}
           >
-            📊 Analytics
+            ✨ Add Resources
           </button>
 
           <button
@@ -78,7 +60,6 @@ export default function NavTabs() {
         </div>
       </div>
 
-      {/* === Main Content Card (Changes with Tabs) === */}
       <div className="main-tab-card">
         {renderTab()}
       </div>

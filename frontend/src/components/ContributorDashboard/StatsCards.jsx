@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API_BASE_URL = "http://localhost:5555"; // change if backend hosted elsewhere
+const API_BASE_URL = "http://localhost:5555"; 
 
 export default function StatsCards() {
   const [stats, setStats] = useState(null);
