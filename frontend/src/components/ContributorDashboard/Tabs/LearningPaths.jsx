@@ -264,17 +264,11 @@ const LearningPaths = () => {
               </div>
             )}
 
-            <div className="path-actions">
-              <button
-                className="edit-btn"
-                onClick={() => handleEditPath(path)}
-              >
+              <div className="path-actions">
+              <button className="purple-btn" onClick={() => handleEditPath(path)}>
                 ✏️ Edit
               </button>
-              <button
-                className="delete-btn"
-                onClick={() => handleDeletePath(path.id)}
-              >
+              <button className="purple-outline-btn" onClick={() => handleDeletePath(path.id)}>
                 🗑 Delete
               </button>
             </div>

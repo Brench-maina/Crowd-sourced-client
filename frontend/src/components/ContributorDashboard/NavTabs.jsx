@@ -18,6 +18,8 @@ export default function NavTabs() {
         return <AddModules />;
       case "AddQuiz": 
         return <AddQuiz />;
+      case "Profile": // ✅ New Profile tab
+        return <Profile />;
       default:
         return <LearningPaths />;
     }
@@ -56,6 +58,13 @@ export default function NavTabs() {
             onClick={() => setActiveTab("AddQuiz")}
           >
             📝 Add Quiz
+          </button>
+
+          <button
+            className={activeTab === "Profile" ? "active" : ""}
+            onClick={() => setActiveTab("Profile")}
+          >
+            👤 Profile
           </button>
         </div>
       </div>

@@ -95,6 +95,48 @@
   transform: translateY(-2px);
   opacity: 0.9;
 }
+/* Reusable purple gradient buttons */
+.purple-btn {
+  background: linear-gradient(90deg, #8b00ff, #b200ff);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.purple-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* Outline button */
+.purple-outline-btn {
+  background: transparent;
+  color: #8b00ff;
+  border: 2px solid #8b00ff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.purple-outline-btn:hover {
+  background: linear-gradient(90deg, #8b00ff, #b200ff);
+  color: white;
+  border: none;
+}
+.path-actions {
+  display: flex;
+  gap: 10px; /* ← adds space between buttons */
+  margin-top: 10px;
+}
+
+
+
 
 /* Responsive */
 @media (max-width: 768px) {
