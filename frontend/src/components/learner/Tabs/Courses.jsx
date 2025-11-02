@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Courses.css";
 
-const Courses = () => {
+const Courses = ({ onStartLearning }) => {
   const [learningPaths, setLearningPaths] = useState([]);
   const [myPaths, setMyPaths] = useState([]);
   const [selectedPath, setSelectedPath] = useState(null);
@@ -15,7 +15,6 @@ const Courses = () => {
     return localStorage.getItem('token') || '';
   };
 
-  // Fetch all learning paths - FIXED URL
   const fetchLearningPaths = async () => {
     try {
       setLoading(true);
@@ -38,7 +37,6 @@ const Courses = () => {
     }
   };
 
-  // Fetch user's followed paths - FIXED URL
   const fetchMyPaths = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/learning-paths/my-paths`, {
@@ -56,16 +54,13 @@ const Courses = () => {
     }
   };
 
-  // Fetch single learning path with modules - FIXED: Use modules endpoint instead
   const fetchLearningPath = async (pathId) => {
     try {
-      // First get basic path info from the paths list
       const path = learningPaths.find(p => p.id === pathId) || myPaths.find(p => p.id === pathId);
       if (!path) {
         throw new Error('Path not found');
       }
 
-      // Then get modules for this path
       const modulesResponse = await fetch(`${API_BASE_URL}/learning-paths/${pathId}/modules`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`
@@ -77,11 +72,10 @@ const Courses = () => {
         modules = await modulesResponse.json();
       }
 
-      // Construct the full path object with modules
       const pathDetails = {
         ...path,
         modules: modules,
-        creator: "Creator Name" // You might want to add creator to your path response
+        creator: "Creator Name"
       };
 
       return pathDetails;
@@ -89,65 +83,55 @@ const Courses = () => {
       console.error('Error fetching learning path:', err);
       setError('Failed to load learning path details');
       
-      // Return basic path info even if modules fail
       const path = learningPaths.find(p => p.id === pathId) || myPaths.find(p => p.id === pathId);
       return path ? { ...path, modules: [] } : null;
     }
   };
 
-  // Follow a learning path - FIXED: This endpoint doesn't exist, so we'll simulate it
   const followPath = async (pathId) => {
     try {
-      // Since /paths/{id}/follow doesn't exist, we'll add to myPaths locally
-      const pathToFollow = learningPaths.find(p => p.id === pathId);
-      if (!pathToFollow) {
-        throw new Error('Path not found');
+      const response = await fetch(`${API_BASE_URL}/learning-paths/paths/${pathId}/follow`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${getAuthToken()}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to follow path');
       }
 
-      // Simulate following by adding to myPaths
-      const newMyPath = {
-        ...pathToFollow,
-        completion_percentage: 0,
-        is_following: true
-      };
-
-      setMyPaths(prev => [...prev, newMyPath]);
-      
-      // Update learning paths to show as followed
-      setLearningPaths(prev => prev.map(p => 
-        p.id === pathId ? { ...p, is_following: true } : p
-      ));
-
+      await Promise.all([fetchLearningPaths(), fetchMyPaths()]);
       return true;
     } catch (err) {
       console.error('Error following path:', err);
-      setError('Failed to follow learning path');
+      setError(err.message || 'Failed to follow learning path');
       return false;
     }
   };
 
-  // Unfollow a learning path - FIXED URL
   const unfollowPath = async (pathId) => {
     try {
       const response = await fetch(`${API_BASE_URL}/learning-paths/paths/${pathId}/unfollow`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${getAuthToken()}`
+          'Authorization': `Bearer ${getAuthToken()}`,
+          'Content-Type': 'application/json'
         }
       });
 
-      if (!response.ok) throw new Error('Failed to unfollow path');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to unfollow path');
+      }
 
-      // Update UI
-      setMyPaths(prev => prev.filter(p => p.id !== pathId));
-      setLearningPaths(prev => prev.map(p => 
-        p.id === pathId ? { ...p, is_following: false } : p
-      ));
-      
+      await Promise.all([fetchLearningPaths(), fetchMyPaths()]);
       return true;
     } catch (err) {
       console.error('Error unfollowing path:', err);
-      setError('Failed to unfollow learning path');
+      setError(err.message || 'Failed to unfollow learning path');
       return false;
     }
   };
@@ -168,16 +152,47 @@ const Courses = () => {
   const handleFollowPath = async (pathId, event) => {
     event.stopPropagation();
     const success = await followPath(pathId);
-    if (success) {
-      // UI is already updated in followPath function
+    if (success && showPathModal && selectedPath && selectedPath.id === pathId) {
+      const updatedPath = await fetchLearningPath(pathId);
+      if (updatedPath) {
+        setSelectedPath(updatedPath);
+      }
     }
   };
 
   const handleUnfollowPath = async (pathId, event) => {
     if (event) event.stopPropagation();
     const success = await unfollowPath(pathId);
-    if (success) {
-      // UI is already updated in unfollowPath function
+    if (success && showPathModal && selectedPath && selectedPath.id === pathId) {
+      const updatedPath = await fetchLearningPath(pathId);
+      if (updatedPath) {
+        setSelectedPath(updatedPath);
+      }
+    }
+  };
+
+  // FIXED: Use the prop function instead of useNavigate
+  const handleModuleClick = async (module) => {
+    try {
+      // Test if module is accessible before navigating
+      const response = await fetch(`${API_BASE_URL}/learning-paths/modules/${module.id}`, {
+        headers: {
+          'Authorization': `Bearer ${getAuthToken()}`
+        }
+      });
+      
+      if (response.ok) {
+        // Use the prop function to switch to ModuleDetail tab
+        if (onStartLearning) {
+          onStartLearning(module);
+        }
+      } else {
+        const errorData = await response.json();
+        alert(errorData.error || 'Module not available. Please follow the path first.');
+      }
+    } catch (error) {
+      console.error('Error accessing module:', error);
+      alert('Failed to load module. Please try again.');
     }
   };
 
@@ -186,7 +201,6 @@ const Courses = () => {
     setSelectedPath(null);
   };
 
-  // Helper function to check if user is following a path
   const isFollowingPath = (pathId) => {
     return myPaths.some(p => p.id === pathId) || 
            learningPaths.some(p => p.id === pathId && p.is_following);
@@ -251,7 +265,13 @@ const Courses = () => {
                   </div>
                 </div>
                 <div className="course-actions">
-                  <button className="continue-btn">
+                  <button 
+                    className="continue-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePathClick(path);
+                    }}
+                  >
                     {!path.completion_percentage || path.completion_percentage === 0 ? 'Start Learning' : 
                      path.completion_percentage === 100 ? 'Review Path' : 'Continue Learning'}
                   </button>
@@ -310,6 +330,9 @@ const Courses = () => {
                 <h3>{selectedPath.title}</h3>
                 <div className="path-meta">
                   <span className="course-category">Learning Path</span>
+                  {isFollowingPath(selectedPath.id) && (
+                    <span className="following-badge">Following</span>
+                  )}
                 </div>
               </div>
               <button className="close-btn" onClick={closeModal}>×</button>
@@ -324,7 +347,16 @@ const Courses = () => {
                 <h4 className="section-title">Path Modules</h4>
                 {selectedPath.modules && selectedPath.modules.length > 0 ? (
                   selectedPath.modules.map((module, index) => (
-                    <div key={module.id} className="module-card">
+                    <div 
+                      key={module.id} 
+                      className={`module-card ${isFollowingPath(selectedPath.id) ? 'clickable' : 'disabled'}`}
+                      onClick={() => {
+                        if (isFollowingPath(selectedPath.id)) {
+                          closeModal();
+                          handleModuleClick(module);
+                        }
+                      }}
+                    >
                       <div className="module-header">
                         <div className="module-info">
                           <div className="module-number">Module {index + 1}</div>
@@ -332,9 +364,25 @@ const Courses = () => {
                           <p className="module-description">{module.description}</p>
                         </div>
                         <div className="module-stats">
-                          <span className="resources">📚 Resources</span>
-                          <span className="quizzes">🧠 Quizzes</span>
+                          <span className="resources">📚 {module.resource_count || 0} Resources</span>
+                          <span className="quizzes">🧠 {module.quiz_count || 0} Quizzes</span>
+                          {module.is_completed && (
+                            <span className="completed-indicator">✓ Completed</span>
+                          )}
                         </div>
+                      </div>
+                      <div className="module-action">
+                        {isFollowingPath(selectedPath.id) ? (
+                          <span className="view-module-text">
+                            {module.is_completed ? 'Review Module' : 
+                             module.completion_percent > 0 ? 'Continue Learning' : 
+                             'Start Module'} →
+                          </span>
+                        ) : (
+                          <span className="view-module-text disabled">
+                            Follow path to access →
+                          </span>
+                        )}
                       </div>
                     </div>
                   ))
@@ -350,17 +398,14 @@ const Courses = () => {
                 {isFollowingPath(selectedPath.id) ? (
                   <button 
                     className="unfollow-btn large"
-                    onClick={() => handleUnfollowPath(selectedPath.id)}
+                    onClick={(e) => handleUnfollowPath(selectedPath.id, e)}
                   >
                     Unfollow Path
                   </button>
                 ) : (
                   <button 
                     className="follow-btn large"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleFollowPath(selectedPath.id, e);
-                    }}
+                    onClick={(e) => handleFollowPath(selectedPath.id, e)}
                   >
                     Follow This Path
                   </button>

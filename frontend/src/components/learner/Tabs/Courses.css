@@ -896,3 +896,50 @@
     margin-bottom: 30px;
   }
 }
+/* Add these styles to your existing Courses.css file */
+
+.module-card.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.module-card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #6366f1;
+}
+
+.module-action {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.view-module-text {
+  color: #6366f1;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.completed-indicator {
+  background: #10b981;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.module-stats {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.module-stats span {
+  font-size: 13px;
+}
