@@ -84,8 +84,7 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
   const getRoleDescription = (role) => {
     const descriptions = {
       learner: 'Access courses, track progress, and earn badges',
-      contributor: 'Create educational content and resources',
-      admin: 'Manage platform content and users'
+      contributor: 'Create educational content and resources'
     };
     return descriptions[role];
   };
@@ -172,7 +171,7 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
           <div className="form-group">
             <label htmlFor="role">I want to join as a...</label>
             <div className="role-cards">
-              {['learner', 'contributor', 'admin'].map((role) => (
+              {['learner', 'contributor'].map((role) => (
                 <label
                   key={role}
                   className={`role-card ${formData.role === role ? 'selected' : ''}`}
@@ -189,7 +188,6 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
                     <div className="role-icon">
                       {role === 'learner' && '🎓'}
                       {role === 'contributor' && '👨‍🏫'}
-                      {role === 'admin' && '⚙️'}
                     </div>
                     <div className="role-info">
                       <div className="role-title">
