@@ -525,4 +525,4 @@ const ChallengesEvents = () => {
   );
 };
 
-export default ChallengesEvents;
+export default ChallengesEvents;    
