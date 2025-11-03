@@ -303,15 +303,12 @@ export default function ModuleDetail({ moduleId }) {
             <p>Loading quiz questions...</p>
           ) : (
             <>
-              {quizQuestions.map((q, qIndex) => (
+            {quizQuestions.map((q, qIndex) => (
   <div key={q.id} className="quiz-question">
     <p>
-      <strong>
-        {qIndex + 1}. {q.text}
-      </strong>
+      <strong>{qIndex + 1}. {q.text}</strong>
     </p>
     <div className="quiz-choices">
-      
       {q.choices.map((c, cIndex) => (
         <label key={c.id} className="choice-option">
           <input
@@ -321,12 +318,13 @@ export default function ModuleDetail({ moduleId }) {
             checked={quizAnswers[q.id] === c.id}
             onChange={() => handleAnswerSelect(q.id, c.id)}
           />
-          <strong>{String.fromCharCode(65 + cIndex)}.</strong> {c.text}
+          <span className="choice-letter">{String.fromCharCode(65 + cIndex)}.</span> {c.text}
         </label>
       ))}
     </div>
   </div>
 ))}
+
 
               {!quizScore && (
                 <button className="submit-quiz-btn" onClick={submitQuiz}>
