@@ -303,25 +303,30 @@ export default function ModuleDetail({ moduleId }) {
             <p>Loading quiz questions...</p>
           ) : (
             <>
-              {quizQuestions.map((q) => (
-                <div key={q.id} className="quiz-question">
-                  <p><strong>{q.text}</strong></p>
-                  <div className="quiz-choices">
-                    {q.choices.map((c) => (
-                      <label key={c.id} className="choice-option">
-                        <input
-                          type="radio"
-                          name={`question-${q.id}`}
-                          value={c.id}
-                          checked={quizAnswers[q.id] === c.id}
-                          onChange={() => handleAnswerSelect(q.id, c.id)}
-                        />
-                        {c.text}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
+              {quizQuestions.map((q, qIndex) => (
+  <div key={q.id} className="quiz-question">
+    <p>
+      <strong>
+        {qIndex + 1}. {q.text}
+      </strong>
+    </p>
+    <div className="quiz-choices">
+      
+      {q.choices.map((c, cIndex) => (
+        <label key={c.id} className="choice-option">
+          <input
+            type="radio"
+            name={`question-${q.id}`}
+            value={c.id}
+            checked={quizAnswers[q.id] === c.id}
+            onChange={() => handleAnswerSelect(q.id, c.id)}
+          />
+          <strong>{String.fromCharCode(65 + cIndex)}.</strong> {c.text}
+        </label>
+      ))}
+    </div>
+  </div>
+))}
 
               {!quizScore && (
                 <button className="submit-quiz-btn" onClick={submitQuiz}>

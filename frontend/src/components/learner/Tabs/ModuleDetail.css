@@ -266,6 +266,23 @@
   font-size: 12px;
   font-weight: 600;
 }
+.quiz-choices {
+  display: flex;
+  flex-direction: column; 
+  gap: 8px;
+}
+
+.choice-option {
+  display: flex;
+  align-items: center;
+  gap: 8px; 
+  cursor: pointer;
+}
+
+.choice-letter {
+  font-weight: 600;
+}
+
 
 .take-quiz-btn {
   background: #8b5cf6;
@@ -449,6 +466,62 @@
 
 .back-btn:hover {
   background: #4f46e5;
+}
+/* Submit Quiz Button */
+.submit-quiz-btn {
+  background-color: #8b5cf6;
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.submit-quiz-btn:hover {
+  background-color: #7c3aed;
+  transform: translateY(-2px);
+}
+
+/* Close Quiz Button */
+.close-quiz-btn {
+  background-color: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.close-quiz-btn:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+}
+
+/* Complete Module Button */
+.complete-btn {
+  background-color: #10b981;
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.complete-btn:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
 }
 
 /* Responsive Design */
