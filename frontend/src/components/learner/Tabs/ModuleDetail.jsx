@@ -354,7 +354,6 @@ export default function ModuleDetail({ moduleId }) {
         </div>
       )}
 
-      {/* Completion Section */}
       {!module.is_completed && (
         <div className="completion-section">
           <button className="complete-btn" onClick={completeModule}>
