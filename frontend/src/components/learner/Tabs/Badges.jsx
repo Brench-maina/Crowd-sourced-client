@@ -6,12 +6,15 @@ const Badges = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+
   useEffect(() => {
     const fetchBadges = async () => {
       setLoading(true);
       setError("");
 
-      const token = localStorage.getItem("token"); // get JWT token from login/signup
+      const token = localStorage.getItem("token"); 
       if (!token) {
         setError("You must be logged in to view badges.");
         setLoading(false);
@@ -19,7 +22,7 @@ const Badges = () => {
       }
 
       try {
-        const res = await fetch("http://localhost:5555/badges/my-badges", {
+        const res = await fetch(`${API_URL}/badges/my-badges`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -38,9 +41,9 @@ const Badges = () => {
           id: b.id,
           name: b.name,
           description: b.description,
-          icon: "🏅", // you can replace this later with real icons from DB
+          icon: "🏅",
           earned: b.is_earned,
-          progress: b.progress?.percent || 0, // depends on BadgeService
+          progress: b.progress?.percent || 0, 
           date: b.is_earned ? b.created_at?.split("T")[0] : null,
         }));
 

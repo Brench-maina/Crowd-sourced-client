@@ -10,7 +10,9 @@ const Login = ({ switchToSignup, onBackToLanding }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth(); // Assuming login updates AuthContext after successful login
+  const { login } = useAuth(); 
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     setFormData({
@@ -27,7 +29,7 @@ const Login = ({ switchToSignup, onBackToLanding }) => {
 
     try {
       // Make fetch POST request to your backend
-      const response = await fetch('http://localhost:5555/auth/login', {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

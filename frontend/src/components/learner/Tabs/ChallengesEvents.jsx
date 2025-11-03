@@ -10,7 +10,8 @@ const ChallengesEvents = () => {
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("challenges");
 
-  const API_BASE_URL = "http://localhost:5555";
+  const API_URL = import.meta.env.VITE_API_URL;
+
 
   const getAuthToken = () => {
     return localStorage.getItem('token') || '';
@@ -42,7 +43,7 @@ const ChallengesEvents = () => {
   // Fetch active challenges
   const fetchActiveChallenges = async () => {
     try {
-      const data = await safeFetch(`${API_BASE_URL}/challenges/active`);
+      const data = await safeFetch(`${API_URL}/challenges/active`);
       setActiveChallenges(data.active_challenges || []);
     } catch (err) {
       console.error('Error fetching challenges:', err);
@@ -54,7 +55,7 @@ const ChallengesEvents = () => {
   // Fetch platform events
   const fetchPlatformEvents = async () => {
     try {
-      const data = await safeFetch(`${API_BASE_URL}/challenges/events/active`);
+      const data = await safeFetch(`${API_URL}/challenges/events/active`);
       setPlatformEvents(data.active_events || []);
     } catch (err) {
       console.error('Error fetching events:', err);
@@ -66,7 +67,7 @@ const ChallengesEvents = () => {
   // Fetch my challenge participations
   const fetchMyParticipations = async () => {
     try {
-      const data = await safeFetch(`${API_BASE_URL}/challenges/my-challenges`);
+      const data = await safeFetch(`${API_URL}/challenges/my-challenges`);
       setMyParticipations(data.participations || []);
     } catch (err) {
       console.error('Error fetching my participations:', err);
@@ -77,7 +78,7 @@ const ChallengesEvents = () => {
   // Join a challenge
   const joinChallenge = async (challengeId) => {
     try {
-      const data = await safeFetch(`${API_BASE_URL}/challenges/challenges/${challengeId}/join`, {
+      const data = await safeFetch(`${API_URL}/challenges/challenges/${challengeId}/join`, {
         method: 'POST'
       });
       
@@ -98,7 +99,7 @@ const ChallengesEvents = () => {
   // Join an event
   const joinEvent = async (eventId) => {
     try {
-      const data = await safeFetch(`${API_BASE_URL}/challenges/events/${eventId}/join`, {
+      const data = await safeFetch(`${API_URL}/challenges/events/${eventId}/join`, {
         method: 'POST'
       });
       
@@ -119,7 +120,7 @@ const ChallengesEvents = () => {
   // Update challenge progress
   const updateChallengeProgress = async (participationId, progressPercent, markCompleted = false) => {
     try {
-      const data = await safeFetch(`${API_BASE_URL}/challenges/participations/${participationId}/progress`, {
+      const data = await safeFetch(`${API_URL}/challenges/participations/${participationId}/progress`, {
         method: 'PUT',
         body: JSON.stringify({
           progress_percent: progressPercent,
@@ -227,7 +228,6 @@ const ChallengesEvents = () => {
     }
   };
 
-  // Calculate days remaining for challenges
   const getChallengeDaysRemaining = (challenge) => {
     try {
       return challenge.days_remaining || 0;

@@ -9,6 +9,8 @@ const Profile = () => {
   const [error, setError] = useState("");
   const token = localStorage.getItem("token"); 
 
+  const API_URL = import.meta.env.VITE_API_URL; 
+
   // Fetch user profile from backend
   useEffect(() => {
     const fetchProfile = async () => {
@@ -17,7 +19,7 @@ const Profile = () => {
       
     
       try {
-        const response = await fetch("http://localhost:5555/user/profile", {
+        const response = await fetch(`${API_URL}/user/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -148,7 +150,7 @@ const Profile = () => {
                   email: e.target.email.value,
                 };
                 try {
-                  const res = await fetch("http://localhost:5555/user/profile/update", {
+                  const res = await fetch(`${API_URL}/user/profile/update`, {
                     method: "PUT",
                     headers: {
                       "Content-Type": "application/json",
@@ -180,7 +182,7 @@ const Profile = () => {
               onClick={async () => {
                 if (!window.confirm("Are you sure you want to delete your account?")) return;
                 try {
-                  const res = await fetch("http://localhost:5555/user/delete", {
+                  const res = await fetch(`${API_URL}/user/delete`, {
                     method: "DELETE",
                     headers: { Authorization: `Bearer ${token}` },
                   });

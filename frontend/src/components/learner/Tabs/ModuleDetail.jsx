@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./ModuleDetail.css";
 
-const API_BASE_URL = "http://localhost:5555";
+const API_URL = import.meta.env.VITE_API_URL; 
 
 export default function ModuleDetail({ moduleId }) {
   const [module, setModule] = useState(null);
@@ -33,7 +33,7 @@ export default function ModuleDetail({ moduleId }) {
 
       console.log(`Fetching module ${moduleId}`);
 
-      const response = await fetch(`${API_BASE_URL}/learning-paths/modules/${moduleId}`, {
+      const response = await fetch(`${API_URL}/learning-paths/modules/${moduleId}`, {
         headers: { 
           Authorization: `Bearer ${getAuthToken()}`,
           'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ export default function ModuleDetail({ moduleId }) {
 
   const startModule = async () => {
     try {
-      await fetch(`${API_BASE_URL}/learning-paths/modules/${moduleId}/start`, {
+      await fetch(`${API_URL}/learning-paths/modules/${moduleId}/start`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${getAuthToken()}`,
@@ -76,7 +76,7 @@ export default function ModuleDetail({ moduleId }) {
 
   const completeModule = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/learning-paths/modules/${moduleId}/complete`, {
+      const response = await fetch(`${API_URL}/learning-paths/modules/${moduleId}/complete`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${getAuthToken()}`,
@@ -105,7 +105,7 @@ export default function ModuleDetail({ moduleId }) {
   const fetchQuizQuestions = async (quizId) => {
     try {
       setQuizLoading(true);
-      const response = await fetch(`${API_BASE_URL}/modules/${moduleId}/quizzes/${quizId}`, {
+      const response = await fetch(`${API_URL}/modules/${moduleId}/quizzes/${quizId}`, {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`,
           "Content-Type": "application/json",
@@ -137,7 +137,7 @@ export default function ModuleDetail({ moduleId }) {
         })),
       };
 
-      const response = await fetch(`${API_BASE_URL}/modules/${moduleId}/quizzes/${selectedQuiz.id}/attempt`, {
+      const response = await fetch(`${API_URL}/modules/${moduleId}/quizzes/${selectedQuiz.id}/attempt`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${getAuthToken()}`,

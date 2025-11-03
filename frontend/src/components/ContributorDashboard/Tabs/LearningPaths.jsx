@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./LearningPaths.css";
 
-const API_BASE_URL = "http://localhost:5555";
+const API_URL = import.meta.env.VITE_API_URL; 
+
 
 const LearningPaths = () => {
   const [view, setView] = useState("list");
@@ -26,7 +27,7 @@ const LearningPaths = () => {
   const fetchMyCreatedPaths = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/learning-paths/paths`, {
+      const response = await fetch(`${API_URL}/learning-paths/paths`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -42,7 +43,7 @@ const LearningPaths = () => {
         paths.map(async (path) => {
           try {
             const modulesResponse = await fetch(
-              `${API_BASE_URL}/learning-paths/${path.id}/modules`,
+              `${API_URL}/learning-paths/${path.id}/modules`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -94,7 +95,7 @@ const LearningPaths = () => {
       if (pathForm.id) {
         // Update existing path
         response = await fetch(
-          `${API_BASE_URL}/learning-paths/paths/${pathForm.id}`,
+          `${API_URL}/learning-paths/paths/${pathForm.id}`,
           {
             method: "PUT",
             headers: {
@@ -128,7 +129,7 @@ const LearningPaths = () => {
         setSuccessMessage("Learning path updated successfully!");
       } else {
         // Create new path
-        response = await fetch(`${API_BASE_URL}/learning-paths/paths`, {
+        response = await fetch(`${API_URL}/learning-paths/paths`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -178,7 +179,7 @@ const LearningPaths = () => {
       setError("");
       setSuccessMessage("");
 
-      const response = await fetch(`${API_BASE_URL}/learning-paths/paths/${id}`, {
+      const response = await fetch(`${API_URL}/learning-paths/paths/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

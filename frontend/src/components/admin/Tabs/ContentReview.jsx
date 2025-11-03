@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-const API_BASE_URL = 'http://localhost:5555';
+const API_URL = import.meta.env.VITE_API_URL; 
+
 
 const fetchAPI = async (endpoint, options = {}) => {
   const token = localStorage.getItem('token');
@@ -19,7 +20,7 @@ const fetchAPI = async (endpoint, options = {}) => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    const response = await fetch(`${API_URL}${endpoint}`, config);
     const data = await response.json();
 
     if (!response.ok) {
@@ -50,7 +51,8 @@ const ContentReview = () => {
       setLoading(true);
       setError('');
       
-      const data = await fetchAPI(`/learning-paths/admin/paths/pending?page=${currentPage}&per_page=10`);
+     const data = await fetchAPI(`/learning-paths/admin/paths/pending?page=${currentPage}&per_page=10`);
+
       
       setPendingPaths(data.pending_paths || []);
       setTotalPages(data.total_pages || 1);

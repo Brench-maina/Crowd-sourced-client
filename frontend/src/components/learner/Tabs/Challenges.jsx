@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-const API_BASE_URL = "http://127.0.0.1:5555"; 
+const API_URL = import.meta.env.VITE_API_URL;
+
 
 const fetchAPI = async (endpoint) => {
   const token = localStorage.getItem("token");
 
   try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const response = await fetch(`${API_URL}${endpoint}`, {
       headers: {
         "Content-Type": "application/json",
         ...(token && { Authorization: `Bearer ${token}` }),

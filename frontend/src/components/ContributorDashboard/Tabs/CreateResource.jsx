@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-const API_BASE_URL = "http://localhost:5555";
+const API_URL = import.meta.env.VITE_API_URL; 
+
 
 const CreateResource = () => {
   const [learningPaths, setLearningPaths] = useState([]);
@@ -21,16 +22,14 @@ const CreateResource = () => {
 
   const token = localStorage.getItem("token");
 
-  // --------------------------
-  // Fetch Learning Paths
-  // --------------------------
+ 
   useEffect(() => {
     fetchMyPaths();
   }, []);
 
   const fetchMyPaths = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/learning-paths/paths`, {
+      const response = await fetch(`${API_URL}/learning-paths/paths`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error("Failed to fetch paths");
@@ -42,9 +41,6 @@ const CreateResource = () => {
     }
   };
 
-  // --------------------------
-  // Fetch Modules when Path selected
-  // --------------------------
   const handlePathChange = async (pathId) => {
     setSelectedPath(pathId);
     setSelectedModule("");
@@ -55,7 +51,7 @@ const CreateResource = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `${API_BASE_URL}/learning-paths/${pathId}/modules`,
+        `${API_URL}/learning-paths/${pathId}/modules`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -71,16 +67,12 @@ const CreateResource = () => {
     }
   };
 
-  // --------------------------
-  // Handle Form Changes
-  // --------------------------
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // --------------------------
-  // Submit Resource
-  // --------------------------
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -104,7 +96,7 @@ const CreateResource = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `${API_BASE_URL}/modules/${selectedModule}/resources`,
+        `${API_URL}/modules/${selectedModule}/resources`,
         {
           method: "POST",
           headers: {
@@ -137,9 +129,6 @@ const CreateResource = () => {
     }
   };
 
-  // --------------------------
-  // JSX Return
-  // --------------------------
   return (
     <div className="main-tab-card">
       <div className="create-resource-card">

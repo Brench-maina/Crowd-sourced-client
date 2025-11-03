@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const API_BASE_URL = "http://localhost:5555"; 
+const API_URL = import.meta.env.VITE_API_URL;
 
 export default function StatsCards() {
   const [stats, setStats] = useState(null);
@@ -15,7 +15,7 @@ export default function StatsCards() {
           throw new Error("Authentication required. Please log in again.");
         }
 
-        const response = await fetch(`${API_BASE_URL}/learning-paths/stats`, {
+        const response = await fetch(`${API_URL}/learning-paths/stats`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

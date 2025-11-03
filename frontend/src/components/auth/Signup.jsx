@@ -16,6 +16,8 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
   //Use login instead of signup to automatically log user in
   const { login } = useAuth();
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -42,7 +44,7 @@ const Signup = ({ switchToLogin, onBackToLanding }) => {
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:5555/auth/register', {
+      const res = await fetch(`${API_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

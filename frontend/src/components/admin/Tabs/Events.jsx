@@ -12,7 +12,7 @@ const Events = () => {
   });
   const [showEventForm, setShowEventForm] = useState(false);
 
-  const API_BASE_URL = "http://localhost:5555";
+  const API_URL = import.meta.env.VITE_API_URL; 
 
   const getAuthToken = () => {
     return localStorage.getItem('token') || '';
@@ -41,7 +41,7 @@ const Events = () => {
   // Fetch active events
   const fetchActiveEvents = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/challenges/events/active`, {
+      const response = await fetch(`${API_URL}/challenges/events/active`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
           'Content-Type': 'application/json'
@@ -62,7 +62,7 @@ const Events = () => {
     if (!isUserLearner()) return;
     
     try {
-      const response = await fetch(`${API_BASE_URL}/challenges/my-challenges`, {
+      const response = await fetch(`${API_URL}/challenges/my-challenges`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
           'Content-Type': 'application/json'
@@ -90,7 +90,7 @@ const Events = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/challenges/events/${eventId}/join`, {
+      const response = await fetch(`${API_URL}/challenges/events/${eventId}/join`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
@@ -117,7 +117,7 @@ const Events = () => {
   const createEvent = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_BASE_URL}/challenges/admin/events`, {
+      const response = await fetch(`${API_URL}/challenges/admin/events`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,

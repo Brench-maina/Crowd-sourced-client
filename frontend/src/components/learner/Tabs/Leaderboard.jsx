@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Leaderboard.css";
 
+const API_URL = import.meta.env.VITE_API_URL; 
 const Leaderboard = () => {
   const [timeframe, setTimeframe] = useState("allTime");
   const [leaderboardData, setLeaderboardData] = useState({
@@ -24,7 +25,8 @@ const Leaderboard = () => {
         throw new Error("Please login to view the leaderboard");
       }
       
-      const baseUrl = "http://localhost:5555/leaderboard";
+      const baseUrl = `${API_URL}/leaderboard`;  
+
       const response = await fetch(`${baseUrl}/${timeframeType}?page=${page}&per_page=20`, {
         method: 'GET',
         headers: {

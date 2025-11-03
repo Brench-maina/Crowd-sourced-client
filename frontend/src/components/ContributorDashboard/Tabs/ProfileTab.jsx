@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./ProfileTab.css";
 
-const API_BASE_URL = "http://localhost:5555";
+const API_URL = import.meta.env.VITE_API_URL; 
+
 
 export default function ProfileTab() {
   const [profile, setProfile] = useState(null);
@@ -20,7 +21,7 @@ export default function ProfileTab() {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/user/profile`, {
+      const response = await fetch(`${API_URL}/user/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -48,7 +49,7 @@ export default function ProfileTab() {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/user/profile/update`, {
+      const response = await fetch(`${API_URL}/user/profile/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -79,7 +80,7 @@ export default function ProfileTab() {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/user/delete`, {
+      const response = await fetch(`${API_URL}/user/delete`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

@@ -9,7 +9,8 @@ const Courses = ({ onStartLearning }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const API_BASE_URL = "http://localhost:5555";
+  const API_URL = import.meta.env.VITE_API_URL;
+
 
   const getAuthToken = () => {
     return localStorage.getItem('token') || '';
@@ -18,7 +19,7 @@ const Courses = ({ onStartLearning }) => {
   const fetchLearningPaths = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/learning-paths/paths`, {
+      const response = await fetch(`${API_URL}/learning-paths/paths`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`
         }
@@ -39,7 +40,7 @@ const Courses = ({ onStartLearning }) => {
 
   const fetchMyPaths = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/learning-paths/my-paths`, {
+      const response = await fetch(`${API_URL}/learning-paths/my-paths`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`
         }
@@ -61,7 +62,7 @@ const Courses = ({ onStartLearning }) => {
         throw new Error('Path not found');
       }
 
-      const modulesResponse = await fetch(`${API_BASE_URL}/learning-paths/${pathId}/modules`, {
+      const modulesResponse = await fetch(`${API_URL}/learning-paths/${pathId}/modules`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`
         }
@@ -90,7 +91,7 @@ const Courses = ({ onStartLearning }) => {
 
   const followPath = async (pathId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/learning-paths/paths/${pathId}/follow`, {
+      const response = await fetch(`${API_URL}/learning-paths/paths/${pathId}/follow`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
@@ -114,7 +115,7 @@ const Courses = ({ onStartLearning }) => {
 
   const unfollowPath = async (pathId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/learning-paths/paths/${pathId}/unfollow`, {
+      const response = await fetch(`${API_URL}/learning-paths/paths/${pathId}/unfollow`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
@@ -175,7 +176,7 @@ const Courses = ({ onStartLearning }) => {
   const handleModuleClick = async (module) => {
     try {
       // Test if module is accessible before navigating
-      const response = await fetch(`${API_BASE_URL}/learning-paths/modules/${module.id}`, {
+      const response = await fetch(`${API_URL}/learning-paths/modules/${module.id}`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`
         }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
-const API_BASE_URL = "http://localhost:5555";
+const API_URL = import.meta.env.VITE_API_URL; 
+
 
 export default function AddQuiz() {
   const [learningPaths, setLearningPaths] = useState([]);
@@ -24,7 +25,7 @@ export default function AddQuiz() {
   const fetchLearningPaths = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/learning-paths/paths`, {
+      const res = await fetch(`${API_URL}/learning-paths/paths`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Failed to fetch learning paths");
@@ -47,7 +48,7 @@ export default function AddQuiz() {
 
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/learning-paths/${pathId}/modules`, {
+      const res = await fetch(`${API_URL}/learning-paths/${pathId}/modules`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Failed to fetch modules");
@@ -121,7 +122,7 @@ export default function AddQuiz() {
       const moduleId = selectedModule;
 
       // 1️⃣ Create the quiz under the module
-      const quizRes = await fetch(`${API_BASE_URL}/modules/${moduleId}/quizzes`, {
+      const quizRes = await fetch(`${API_URL}/modules/${moduleId}/quizzes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +137,7 @@ export default function AddQuiz() {
       // 2️⃣ Add questions to the created quiz
       for (let q of questions) {
         const questionRes = await fetch(
-          `${API_BASE_URL}/modules/${moduleId}/quizzes/${quizData.id}/questions`,
+          `${API_URL}/modules/${moduleId}/quizzes/${quizData.id}/questions`,
           {
             method: "POST",
             headers: {

@@ -23,7 +23,8 @@ const Challenges = () => {
     correct_answer: 0
   });
 
-  const API_BASE_URL = "http://localhost:5555";
+ const API_URL = import.meta.env.VITE_API_URL; 
+
 
   const getAuthToken = () => {
     return localStorage.getItem('token') || '';
@@ -52,7 +53,7 @@ const Challenges = () => {
   // Fetch available internal quizzes
   const fetchAvailableQuizzes = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/quizzes/available`, {
+      const response = await fetch(`${API_URL}/quizzes/available`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
           'Content-Type': 'application/json'
@@ -77,7 +78,7 @@ const Challenges = () => {
   // Fetch active challenges
   const fetchActiveChallenges = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/challenges/active`, {
+      const response = await fetch(`${API_URL}/challenges/active`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
           'Content-Type': 'application/json'
@@ -98,7 +99,7 @@ const Challenges = () => {
     if (!isUserLearner()) return;
     
     try {
-      const response = await fetch(`${API_BASE_URL}/challenges/my-challenges`, {
+      const response = await fetch(`${API_URL}/challenges/my-challenges`, {
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
           'Content-Type': 'application/json'
@@ -125,7 +126,7 @@ const Challenges = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/challenges/challenges/${challengeId}/join`, {
+      const response = await fetch(`${API_URL}/challenges/challenges/${challengeId}/join`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
@@ -197,7 +198,7 @@ const Challenges = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/challenges/admin/challenges`, {
+      const response = await fetch(`${API_URL}/challenges/admin/challenges`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
@@ -242,7 +243,7 @@ const Challenges = () => {
   // Link quiz to challenge
   const linkQuizToChallenge = async (challengeId, quizId) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/quizzes/${challengeId}/link-quiz`, {
+      const response = await fetch(`${API_URL}/quizzes/${challengeId}/link-quiz`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${getAuthToken()}`,
