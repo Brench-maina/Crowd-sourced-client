@@ -19,17 +19,18 @@ export default function StatsCards() {
   const fetchStatsData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const baseURL = "http://localhost:5555";
+      const API_URL = import.meta.env.VITE_API_URL; 
+
       
       // Fetch user data for XP, level, and progress
-      const userResponse = await fetch(`${baseURL}/user/profile`, {
+      const userResponse = await fetch(`${API_URL}/user/profile`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         }
       });
 
       // Fetch user badges count - FIXED: Use correct endpoint
-      const badgesResponse = await fetch(`${baseURL}/badges/my-badges`, {
+      const badgesResponse = await fetch(`${API_URL}/badges/my-badges`, {
         headers: {
           "Authorization": `Bearer ${token}`,
         }
